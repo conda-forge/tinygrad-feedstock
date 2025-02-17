@@ -45,8 +45,6 @@ build:
     # skip windows until next version (where testing without jax should be possible),
     # or when conda-forge gains windows-support for jax
     - win
-    # only one CUDA build because there's not enough disk space to build all variants in one job
-    - cuda_compiler_version != "None" and match(python, "!=3.12")
 
 outputs:
   - package:
