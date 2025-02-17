@@ -48,6 +48,11 @@ outputs:
     build:
       script: python -m pip install . -vv
     requirements:
+      build:
+        - if: build_platform != target_platform
+          then:
+            - python
+            - cross-python_${{ target_platform }}
       host:
         - python
         - pip
@@ -87,7 +92,9 @@ outputs:
             # optional
             - blobfile
             - bottle
-            - capstone
+            - if: x86_64
+              then:
+                - capstone
             # https://github.com/conda-forge/staged-recipes/issues/29179
             # - ggml-python
             - if: unix
