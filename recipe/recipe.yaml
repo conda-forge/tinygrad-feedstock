@@ -34,6 +34,7 @@ source:
     - patches/0001-also-install-tinygrad.viz.patch
     # clang 19 doesn't seem to support -std=metal3.1 yet
     - patches/0002-downgrade-default-metal-standard.patch
+    - patches/0003-rely-on-the-packaged-CUDA-toolchain.patch
 
 build:
   number: ${{ build_number }}
