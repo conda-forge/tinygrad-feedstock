@@ -53,6 +53,12 @@ outputs:
           then:
             - python
             - cross-python_${{ target_platform }}
+        # this is just here so smithy creates separate jobs for the CUDA variants
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ stdlib("c") }}
+            - ${{ compiler("cxx") }}
+            - ${{ compiler("cuda") }}
       host:
         - python
         - pip
