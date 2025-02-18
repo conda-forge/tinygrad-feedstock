@@ -2,7 +2,7 @@ context:
   version: "0.10.1"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
-  torch_proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
+  proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
   tests_to_skip: >
     _not_a_real_test
     ${{ "fails `assert Device.DEFAULT in failed_platforms`" if 0 }}
@@ -37,7 +37,7 @@ source:
 
 build:
   number: ${{ build_number }}
-  string: ${{ torch_proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   skip:
     - match(python, "<3.10")
     # toolchain for 11.8 is not usable in end-user environment
