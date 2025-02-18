@@ -139,8 +139,8 @@ outputs:
           - if: unix and build_platform == target_platform
             then:
               - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})"
-            else:
-              # test suite in emulation on aarch is super slow;
+          - if: win
+            then:
               # windows cannot run tests yet due to lack of jax
               - python examples/beautiful_mnist.py
 
