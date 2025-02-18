@@ -92,7 +92,6 @@ outputs:
           run:
             # minimal
             - pytest
-            - pytest-rerunfailures
             - pytest-xdist
             - hypothesis
             - numpy
@@ -136,7 +135,13 @@ outputs:
           - if: win
             then:
               - set "CLANG="
-          - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})" --reruns=5 --reruns-delay=5
+          - if: unix and build_platform == target_platform
+            then:
+              - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})"
+            else:
+              # test suite in emulation on aarch is super slow;
+              # windows cannot run tests yet due to lack of jax
+              - python examples/beautiful_mnist.py
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
