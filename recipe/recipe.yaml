@@ -73,6 +73,8 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
+        - if: cuda_compiler_version != "None" and linux
+          then:
             - triton
     tests:
       - python:
