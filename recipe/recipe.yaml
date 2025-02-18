@@ -1,6 +1,6 @@
 context:
   version: "0.10.1"
-  build_number: 0
+  build_number: 1
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   torch_proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
   tests_to_skip: >
@@ -72,7 +72,7 @@ outputs:
     tests:
       - python:
           imports:
-          - tinygrad
+            - tinygrad
           pip_check: true
 
   - package:
@@ -134,7 +134,7 @@ about:
   summary: 'You like pytorch? You like micrograd? You love tinygrad! ❤️'
   description: |
     This may not be the best deep learning framework, but it is a deep learning framework.
-    
+
     Due to its extreme simplicity, it aims to be the easiest framework to add new accelerators to,
     with support for both inference and training. If XLA is CISC, tinygrad is RISC.
   license: MIT
