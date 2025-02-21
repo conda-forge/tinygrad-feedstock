@@ -1,5 +1,5 @@
 context:
-  version: "0.10.1"
+  version: "0.10.2"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
@@ -7,12 +7,9 @@ context:
     _not_a_real_test
     ${{ "fails `assert Device.DEFAULT in failed_platforms`" if 0 }}
     ${{ " or (TestLinearizerFailures and test_failure_27)" if linux }}
-    ${{ " or (TestLinearizerFailures and (test_failure_56 or test_failure_57))" if osx }}
     ${{ "Causes `Fatal Python error: Bus error` + segfault" if 0 }}
     ${{ " or testCopySHMtoDefault" if linux }}
-    ${{ "timing-sensitive; may fail in our relatively puny CI" if 0 }}
-    ${{ " or test_recursive_pad" if linux }}
-    ${{ "`NotImplementedError: Encountered unknown relocation type 4` for something elf-related" if 0 }}
+    ${{ "`RuntimeError: Attempting to relocate against an undefined symbol 'fmaxf'" if 0 }}
     ${{ " or test_backward_sum_acc_dtype" if linux }}
     ${{ "RuntimeError: Attribute list does not match Module context!" if 0 }}
     ${{ " or test_bf16_disk_write_read" if linux and cuda_compiler_version != "None" }}
@@ -29,12 +26,9 @@ recipe:
 
 source:
   url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: a22402a8c08da0930720b13a8a66a9c9f99507b15fca9caf31fde63776529ca8
+  sha256: 3e0fd20a2df28e95ee2c6c5aa02a1cf872ea8ff285ea74ee91d76c694c03b3ae
   patches:
-    - patches/0001-also-install-tinygrad.viz.patch
-    # clang 19 doesn't seem to support -std=metal3.1 yet
-    - patches/0002-downgrade-default-metal-standard.patch
-    - patches/0003-rely-on-the-packaged-CUDA-toolchain.patch
+    - patches/0001-rely-on-the-packaged-CUDA-toolchain.patch
 
 build:
   number: ${{ build_number }}
@@ -43,6 +37,7 @@ build:
     - match(python, "<3.10")
     # toolchain for 11.8 is not usable in end-user environment
     - match(cuda_compiler_version, "==11.8")
+
 outputs:
   - package:
       name: tinygrad
@@ -80,11 +75,14 @@ outputs:
     tests:
       - python:
           imports:
-          - tinygrad
+            - tinygrad
           pip_check: true
 
   - package:
       name: tinygrad-tests
+    build:
+      # silly: https://github.com/prefix-dev/rattler-build/pull/1367
+      script: ${{ 'true' if unix else 'exit /b 0' }}
     requirements:
       run:
         - ${{ pin_subpackage('tinygrad', exact=True) }}
@@ -128,14 +126,7 @@ outputs:
             - extra/
             - test/
         script:
-          # tinygrad uses `CLANG` as a boolean switch, which is incompatible with our compiler activation;
-          # see https://github.com/tinygrad/tinygrad/blob/v0.10.1/tinygrad/device.py#L13
-          - if: unix
-            then:
-              - unset CLANG
-          - if: win
-            then:
-              - set "CLANG="
+          # test suite in emulation on aarch is super slow
           - if: unix and build_platform == target_platform
             then:
               - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})"
@@ -143,13 +134,14 @@ outputs:
             then:
               # windows cannot run tests yet due to lack of jax
               - python examples/beautiful_mnist.py
+          - echo "just something so aarch doesn't have an empty script section"
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
   summary: 'You like pytorch? You like micrograd? You love tinygrad! ❤️'
   description: |
     This may not be the best deep learning framework, but it is a deep learning framework.
-    
+
     Due to its extreme simplicity, it aims to be the easiest framework to add new accelerators to,
     with support for both inference and training. If XLA is CISC, tinygrad is RISC.
   license: MIT
