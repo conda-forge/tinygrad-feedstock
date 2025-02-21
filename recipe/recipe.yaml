@@ -31,10 +31,7 @@ source:
   url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
   sha256: 3e0fd20a2df28e95ee2c6c5aa02a1cf872ea8ff285ea74ee91d76c694c03b3ae
   patches:
-    - patches/0001-also-install-tinygrad.viz.patch
-    # clang 19 doesn't seem to support -std=metal3.1 yet
-    - patches/0002-downgrade-default-metal-standard.patch
-    - patches/0003-rely-on-the-packaged-CUDA-toolchain.patch
+    - patches/0001-rely-on-the-packaged-CUDA-toolchain.patch
 
 build:
   number: ${{ build_number }}
