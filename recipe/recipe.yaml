@@ -40,6 +40,7 @@ build:
     - match(python, "<3.10")
     # toolchain for 11.8 is not usable in end-user environment
     - match(cuda_compiler_version, "==11.8")
+
 outputs:
   - package:
       name: tinygrad
@@ -82,6 +83,9 @@ outputs:
 
   - package:
       name: tinygrad-tests
+    build:
+      # silly: https://github.com/prefix-dev/rattler-build/pull/1367
+      script: ${{ 'true' if unix else 'exit /b 0' }}
     requirements:
       run:
         - ${{ pin_subpackage('tinygrad', exact=True) }}
