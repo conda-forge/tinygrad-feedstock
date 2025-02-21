@@ -129,6 +129,7 @@ outputs:
             - extra/
             - test/
         script:
+          # test suite in emulation on aarch is super slow
           - if: unix and build_platform == target_platform
             then:
               - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})"
@@ -136,6 +137,7 @@ outputs:
             then:
               # windows cannot run tests yet due to lack of jax
               - python examples/beautiful_mnist.py
+          - echo "just something so aarch doesn't have an empty script section"
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
