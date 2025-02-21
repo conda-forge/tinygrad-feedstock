@@ -7,12 +7,9 @@ context:
     _not_a_real_test
     ${{ "fails `assert Device.DEFAULT in failed_platforms`" if 0 }}
     ${{ " or (TestLinearizerFailures and test_failure_27)" if linux }}
-    ${{ " or (TestLinearizerFailures and (test_failure_56 or test_failure_57))" if osx }}
     ${{ "Causes `Fatal Python error: Bus error` + segfault" if 0 }}
     ${{ " or testCopySHMtoDefault" if linux }}
-    ${{ "timing-sensitive; may fail in our relatively puny CI" if 0 }}
-    ${{ " or test_recursive_pad" if linux }}
-    ${{ "`NotImplementedError: Encountered unknown relocation type 4` for something elf-related" if 0 }}
+    ${{ "`RuntimeError: Attempting to relocate against an undefined symbol 'fmaxf'" if 0 }}
     ${{ " or test_backward_sum_acc_dtype" if linux }}
     ${{ "RuntimeError: Attribute list does not match Module context!" if 0 }}
     ${{ " or test_bf16_disk_write_read" if linux and cuda_compiler_version != "None" }}
