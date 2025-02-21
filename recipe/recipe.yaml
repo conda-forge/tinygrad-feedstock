@@ -1,5 +1,5 @@
 context:
-  version: "0.10.1"
+  version: "0.10.2"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
@@ -29,7 +29,7 @@ recipe:
 
 source:
   url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: a22402a8c08da0930720b13a8a66a9c9f99507b15fca9caf31fde63776529ca8
+  sha256: 3e0fd20a2df28e95ee2c6c5aa02a1cf872ea8ff285ea74ee91d76c694c03b3ae
   patches:
     - patches/0001-also-install-tinygrad.viz.patch
     # clang 19 doesn't seem to support -std=metal3.1 yet
@@ -80,7 +80,7 @@ outputs:
     tests:
       - python:
           imports:
-          - tinygrad
+            - tinygrad
           pip_check: true
 
   - package:
@@ -149,7 +149,7 @@ about:
   summary: 'You like pytorch? You like micrograd? You love tinygrad! ❤️'
   description: |
     This may not be the best deep learning framework, but it is a deep learning framework.
-    
+
     Due to its extreme simplicity, it aims to be the easiest framework to add new accelerators to,
     with support for both inference and training. If XLA is CISC, tinygrad is RISC.
   license: MIT
