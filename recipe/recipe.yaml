@@ -1,5 +1,5 @@
 context:
-  version: "0.10.2"
+  version: "0.10.3"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
@@ -26,7 +26,7 @@ recipe:
 
 source:
   url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 3e0fd20a2df28e95ee2c6c5aa02a1cf872ea8ff285ea74ee91d76c694c03b3ae
+  sha256: ea91abf82ca5e89f15e0c0e71d222df8c037d225cc12651cb661fb77b2281ede
   patches:
     - patches/0001-rely-on-the-packaged-CUDA-toolchain.patch
 
@@ -69,9 +69,9 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
-        - if: cuda_compiler_version != "None" and linux
-          then:
-            - triton
+            - if: linux
+              then:
+                - triton
     tests:
       - python:
           imports:
