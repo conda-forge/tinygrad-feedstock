@@ -1,6 +1,6 @@
 context:
   version: "0.10.2"
-  build_number: 0
+  build_number: 1
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
   tests_to_skip: >
@@ -69,9 +69,9 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
-        - if: cuda_compiler_version != "None" and linux
-          then:
-            - triton
+            - if: linux
+              then:
+                - triton
     tests:
       - python:
           imports:
