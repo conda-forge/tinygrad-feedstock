@@ -79,8 +79,18 @@ outputs:
   - package:
       name: tinygrad-tests
     build:
-      # silly: https://github.com/prefix-dev/rattler-build/pull/1367
-      script: ${{ 'true' if unix else 'exit /b 0' }}
+      # splitting off what conda packages under etc/conda/test-files when using test.files.source
+      script:
+        - if: unix
+          # silly: https://github.com/prefix-dev/rattler-build/pull/1367
+          then: true
+          else:
+            # remove symlinks in sources on windows by copying
+            - copy /Y extra\accel\ane\3_run\h11ane.h extra\accel\ane\lib\h11ane.h
+            - copy /Y extra\accel\ane\3_run\entitlements.xml extra\accel\ane\lib\entitlements.xml
+            - copy /Y extra\accel\ane\lib\ane.py extra\accel\ane\2_compile\ane.py
+            - copy /Y extra\accel\ane\lib\aneregs.json extra\accel\ane\2_compile\aneregs.json
+
     requirements:
       run:
         - ${{ pin_subpackage('tinygrad', exact=True) }}
