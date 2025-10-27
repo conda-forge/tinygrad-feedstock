@@ -27,6 +27,8 @@ recipe:
 source:
   url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
   sha256: ea91abf82ca5e89f15e0c0e71d222df8c037d225cc12651cb661fb77b2281ede
+  patches:
+    - patches/0001-point-to-our-own-llvmdev.patch
 
 build:
   number: ${{ build_number }}
@@ -57,6 +59,7 @@ outputs:
         - setuptools
       run:
         - python
+        - llvmdev
         - if: win
           then:
             - clang-cl_${{ target_platform }}
@@ -72,6 +75,7 @@ outputs:
       - python:
           imports:
             - tinygrad
+            - tinygrad.runtime.autogen.llvm
           pip_check: true
 
   - package:
