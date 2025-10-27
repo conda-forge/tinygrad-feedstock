@@ -99,10 +99,13 @@ outputs:
             - pytest
             - pytest-xdist
             - hypothesis
+            - ml_dtypes
             - numpy
             - pytorch
+            - z3-solver
             # optional
             - blobfile
+            - boto3
             - bottle
             - if: x86_64
               then:
@@ -118,7 +121,10 @@ outputs:
             - nibabel
             - onnx2torch
             - onnx
+            - onnxruntime
+            - pandas
             - py-opencv
+            - pycocotools
             - pillow
             - safetensors
             - sentencepiece
