@@ -134,6 +134,7 @@ outputs:
             - onnxruntime
             - pandas
             - py-opencv
+            - pybind11
             - pycocotools
             - pillow
             - safetensors
