@@ -168,6 +168,9 @@ outputs:
                 - 'tests_to_skip += " or test_float_cast_to_unsigned"'
                 # beam-related stuff seems to hang
                 - 'tests_to_skip += " or TestBEAM or test_beam"'
+                # another apparent hang
+                - 'tests_to_skip += " or test_getotherprocess"'
+                - 'tests_to_skip += " or test_putotherprocess"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == target_platform
