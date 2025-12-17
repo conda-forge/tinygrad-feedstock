@@ -21,6 +21,8 @@ build:
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   skip:
     - match(python, "<3.10")
+    # debug
+    - not win
 
 outputs:
   - package:
@@ -188,6 +190,7 @@ outputs:
             else:
               - set "STEPS=25"
               - set "TARGET_EVAL_ACC_PCT=90"
+              - set "DEBUG=2"
           - if: aarch64
             then:
               # reduce number of steps in emulation
