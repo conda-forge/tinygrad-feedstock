@@ -184,15 +184,19 @@ outputs:
             - examples/
         script:
           # reduce number of steps; we just need to show that it's functional
+          # however, accuracy should at least trend in the right direction
           - if: unix
             then:
               - export STEPS=25
+              - export TARGET_EVAL_ACC_PCT=90
             else:
               - set "STEPS=25"
+              - set "TARGET_EVAL_ACC_PCT=90"
           - if: aarch64
             then:
               # reduce number of steps in emulation
               - export STEPS=5
+              - unset TARGET_EVAL_ACC_PCT
           - python ./examples/beautiful_mnist.py
 
 about:
