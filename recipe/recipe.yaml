@@ -3,22 +3,6 @@ context:
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
-  tests_to_skip: >
-    _not_a_real_test
-    ${{ "fails `assert Device.DEFAULT in failed_platforms`" if 0 }}
-    ${{ " or (TestLinearizerFailures and test_failure_27)" if linux }}
-    ${{ "Causes `Fatal Python error: Bus error` + segfault" if 0 }}
-    ${{ " or testCopySHMtoDefault" if linux }}
-    ${{ "`RuntimeError: Attempting to relocate against an undefined symbol 'fmaxf'" if 0 }}
-    ${{ " or test_backward_sum_acc_dtype" if linux }}
-    ${{ "RuntimeError: Attribute list does not match Module context!" if 0 }}
-    ${{ " or test_bf16_disk_write_read" if linux and cuda_compiler_version != "None" }}
-    ${{ "`error: use of undefined value '@.const.pickledata.7893608704'`" if 0 }}
-    ${{ " or (TestWhisper and (test_transcribe_batch21 or test_transcribe_file1))" if osx }}
-    ${{ "signed int32 overflow" if 0 }}
-    ${{ " or test_float_midcast_int32" if osx }}
-    ${{ "tinygrad.codegen.kernel.KernelOptError: must have tensor cores or TC=2" if 0 }}
-    ${{ " or test_unmerged_ifs" if osx }}
 
 recipe:
   name: tinygrad
@@ -149,15 +133,40 @@ outputs:
             - extra/
             - test/
         script:
-          # test suite in emulation on aarch is super slow
-          - if: unix and build_platform == target_platform
-            then:
-              - pytest -n 2 -v test/ -k "not (${{ tests_to_skip }})"
-          - if: win
-            then:
-              # windows cannot run tests yet due to lack of jax
-              - python examples/beautiful_mnist.py
-          - echo "just something so aarch doesn't have an empty script section"
+          interpreter: python
+          content:
+            - 'import pytest'
+            - 'import sys'
+            - 'tests_to_skip = "_not_a_real_test"'
+            - if: linux
+              then:
+                # fails `assert Device.DEFAULT in failed_platforms`
+                - 'tests_to_skip += " or (TestLinearizerFailures and test_failure_27)"'
+                # Causes `Fatal Python error: Bus error` + segfault
+                - 'tests_to_skip += " or testCopySHMtoDefault"'
+                # RuntimeError: Attempting to relocate against an undefined symbol 'fmaxf'
+                - 'tests_to_skip += " or test_backward_sum_acc_dtype"'
+            - if: linux and cuda_compiler_version != "None"
+              then:
+                # RuntimeError: Attribute list does not match Module context!
+                - 'tests_to_skip += " or test_bf16_disk_write_read"'
+            - if: osx
+              then:
+                # error: use of undefined value '@.const.pickledata.7893608704'
+                - 'tests_to_skip += " or (TestWhisper and (test_transcribe_batch21 or test_transcribe_file1))"'
+                # signed int32 overflow
+                - 'tests_to_skip += " or test_float_midcast_int32"'
+                # tinygrad.codegen.kernel.KernelOptError: must have tensor cores or TC=2
+                - 'tests_to_skip += " or test_unmerged_ifs"'
+
+            # test suite in emulation on aarch is super slow, skip it there
+            - if: unix and build_platform == target_platform
+              then:
+                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})"]))'
+            - if: win
+              then:
+                # windows cannot run tests yet due to lack of jax
+                - 'python examples/beautiful_mnist.py'
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
