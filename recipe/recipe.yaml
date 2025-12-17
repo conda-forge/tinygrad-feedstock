@@ -50,7 +50,7 @@ outputs:
       run:
         - python
         - llvmdev
-        - clangxx_${{ target_platform }}
+        - clangxx_${{ target_platform }} <20
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
