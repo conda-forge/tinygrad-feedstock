@@ -163,10 +163,14 @@ outputs:
             - if: unix and build_platform == target_platform
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})"]))'
-            - if: win
-              then:
-                # windows cannot run tests yet due to lack of jax
-                - 'python examples/beautiful_mnist.py'
+
+      # simpler test that only runs one example;
+      # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
+      - files:
+          source:
+            - examples/
+        script:
+          - python ./examples/beautiful_mnist.py
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
