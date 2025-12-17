@@ -183,6 +183,12 @@ outputs:
           source:
             - examples/
         script:
+          # reduce number of steps; we just need to show that it's functional
+          - if: unix
+            then:
+              - export STEPS=25
+            else:
+              - set "STEPS=25"
           - if: aarch64
             then:
               # reduce number of steps in emulation
