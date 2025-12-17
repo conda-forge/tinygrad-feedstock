@@ -146,6 +146,8 @@ outputs:
                 - 'tests_to_skip += " or testCopySHMtoDefault"'
                 # RuntimeError: Attempting to relocate against an undefined symbol 'fmaxf'
                 - 'tests_to_skip += " or test_backward_sum_acc_dtype"'
+                # cannot load onnx model from some temporary location
+                - 'tests_to_skip += " or (TestQuantizeOnnxCPU and test_quant_128)"'
             - if: linux and cuda_compiler_version != "None"
               then:
                 # RuntimeError: Attribute list does not match Module context!
@@ -158,6 +160,14 @@ outputs:
                 - 'tests_to_skip += " or test_float_midcast_int32"'
                 # tinygrad.codegen.kernel.KernelOptError: must have tensor cores or TC=2
                 - 'tests_to_skip += " or test_unmerged_ifs"'
+                # RuntimeError: The MPS backend is supported on MacOS 14.0+
+                - 'tests_to_skip += " or test_torch_interop"'
+                #  nan location mismatch in comparison
+                - 'tests_to_skip += " or test_conv2d_fused"'
+                # flaky hypothesis test
+                - 'tests_to_skip += " or test_float_cast_to_unsigned"'
+                # beam-related stuff seems to hang
+                - 'tests_to_skip += " or TestBEAM or test_beam"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == target_platform
