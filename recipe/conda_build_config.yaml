@@ -1,5 +1,5 @@
 # tinygrad relies on metal support
 c_stdlib_version:   # [osx]
-  - 13.0            # [osx]
+  - 15.5            # [osx]
 MACOSX_SDK_VERSION: # [osx]
-  - 13.3            # [osx]
+  - 15.5            # [osx]
