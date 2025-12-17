@@ -180,6 +180,10 @@ outputs:
           source:
             - examples/
         script:
+          - if: aarch64
+            then:
+              # reduce number of steps in emulation
+              - export STEPS=5
           - python ./examples/beautiful_mnist.py
 
 about:
