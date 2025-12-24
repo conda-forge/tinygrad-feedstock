@@ -190,6 +190,10 @@ outputs:
             else:
               - set "STEPS=25"
               - set "TARGET_EVAL_ACC_PCT=90"
+              # remove extraneous clang's in image, c.f.
+              # https://github.com/conda-forge/conda-forge-ci-setup-feedstock/pull/408
+              - rmdir /s /q "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm"
+              - rmdir /s /q "C:\Program Files\LLVM"
           - if: aarch64
             then:
               # reduce number of steps in emulation
