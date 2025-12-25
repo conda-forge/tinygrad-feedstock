@@ -17,7 +17,6 @@ source:
     - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
     # see more clearly what's happening in mnist test
     - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
-    - patches/0004-skip-GPU-device-on-windows.patch
 
 build:
   number: ${{ build_number }}
@@ -193,7 +192,7 @@ outputs:
             else:
               - set "STEPS=25"
               - set "TARGET_EVAL_ACC_PCT=90"
-              - set "DEBUG=2"
+              - set "DEBUG=5"
               - set "CPU_COUNT=1"
               # remove extraneous clang's in image, c.f.
               # https://github.com/conda-forge/conda-forge-ci-setup-feedstock/pull/408
