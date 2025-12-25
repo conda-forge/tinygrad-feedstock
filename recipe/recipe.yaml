@@ -142,6 +142,10 @@ outputs:
                 - 'tests_to_skip += " or test_backward_sum_acc_dtype"'
                 # cannot load onnx model from some temporary location
                 - 'tests_to_skip += " or (TestQuantizeOnnxCPU and test_quant_128)"'
+                # module 'tinygrad.runtime.autogen.libc' has no attribute 'syscall'
+                - 'tests_to_skip += " or (TestEfficientNet and (car or chicken))"'
+                # No such file or directory: '/tmp/tmpqhndyk1l.so'
+                - 'tests_to_skip += " or test_bitfield_interop or test_packed_struct_interop"'
             - if: linux and cuda_compiler_version != "None"
               then:
                 # RuntimeError: Attribute list does not match Module context!
