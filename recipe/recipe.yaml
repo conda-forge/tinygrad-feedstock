@@ -79,6 +79,13 @@ outputs:
               then:
                 - triton
       run_constraints:
+        - if: linux
+          then:
+            # avoid wrong compiler activation that interferes with clang_<target>
+            - gcc_linux-64 <0.0a0
+            - gxx_linux-64 <0.0a0
+            - gcc_linux-aarch64 <0.0a0
+            - gxx_linux-aarch64 <0.0a0
         - if: win
           then:
             # avoid pulling in old MSVC activation
