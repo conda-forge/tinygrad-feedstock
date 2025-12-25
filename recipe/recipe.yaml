@@ -47,8 +47,8 @@ outputs:
         - python
         - llvmdev
         - clangxx_${{ target_platform }}
-        # ensure `bin/clang` symlink is present
-        - clang
+        # tinygrad wants headers from `include/clang-c`; also ensure `bin/clang` symlink is present
+        - clangdev
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
