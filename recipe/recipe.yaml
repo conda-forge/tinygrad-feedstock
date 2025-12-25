@@ -17,6 +17,8 @@ source:
     - patches/0001-point-to-our-own-llvmdev.patch
     # see more clearly what's happening in mnist test
     - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+    # DEBUG
+    - patches/0003-do-not-JIT-test-accuracy-on-osx.patch
 
 build:
   number: ${{ build_number }}
