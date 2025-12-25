@@ -23,6 +23,10 @@ source:
     - patches/0004-look-for-libraries-in-PREFIX-first.patch
     # backport https://github.com/tinygrad/tinygrad/pull/13863
     - patches/0005-also-look-for-linux-libraries-in-RHEL-themed-paths.patch
+    # DEBUG
+    - if: osx
+      then:
+        - patches/0006-do-not-JIT-test-accuracy-on-osx.patch
 
 build:
   number: ${{ build_number }}
