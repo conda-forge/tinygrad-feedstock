@@ -44,6 +44,7 @@ build:
     # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
     - cuda_compiler_version == "None" and "gpu" in github_actions_labels
     - cuda_compiler_version != "None" and "cpu" in github_actions_labels
+    - match(python, "<3.11")
 
 outputs:
   - package:
