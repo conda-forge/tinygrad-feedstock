@@ -29,6 +29,8 @@ build:
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   skip:
     - match(python, "<3.11")
+    # DEBUG
+    - not osx
 
 outputs:
   - package:
