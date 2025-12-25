@@ -196,7 +196,7 @@ outputs:
                 - 'tests_to_skip += " or TestGC or test_gc"'
 
             # test suite in emulation on aarch is super slow, skip it there
-            - if: unix and build_platform == target_platform
+            - if: linux and build_platform == target_platform
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50", "--maxfail=20"]))'
 
