@@ -85,8 +85,8 @@ outputs:
         - capstone
         - llvmdev
         - clangxx_${{ host_platform }}
-        # ensure `bin/clang` symlink is present
-        - clang
+        # tinygrad wants headers from `include/clang-c`; also ensure `bin/clang` symlink is present
+        - clangdev
         # avoid solver choosing ancient clang versions
         - clang >18
         - if: cuda_compiler_version != "None"
