@@ -189,8 +189,8 @@ outputs:
           - if: aarch64
             then:
               # reduce number of steps in emulation
-              - export STEPS=5
-              - unset TARGET_EVAL_ACC_PCT
+              - export STEPS=3
+              - export TARGET_EVAL_ACC_PCT=30
           - python ./examples/beautiful_mnist.py
 
 about:
