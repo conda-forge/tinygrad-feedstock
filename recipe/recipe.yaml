@@ -1,5 +1,5 @@
 context:
-  version: "0.11.0"
+  version: "0.11.1dev"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
@@ -9,8 +9,10 @@ recipe:
   version: ${{ version }}
 
 source:
-  url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
+  git: https://github.com/tinygrad/tinygrad.git
+  rev: "54af29dbdb6c266bae2590e68d4a0b2c5e61279c"
+  # url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
+  # sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
   patches:
     - patches/0001-point-to-our-own-llvmdev.patch
     # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
