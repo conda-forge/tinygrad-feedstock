@@ -24,6 +24,8 @@ build:
   skip:
     - match(python, "<3.11")
     - build_platform != host_platform
+    # already green
+    - win
 
 outputs:
   - package:
