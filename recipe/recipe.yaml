@@ -174,7 +174,7 @@ outputs:
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == target_platform
               then:
-                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
+                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50", "--maxfail=20"]))'
 
       # simpler test that only runs one example;
       # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
