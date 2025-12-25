@@ -71,15 +71,7 @@ outputs:
           # silly: https://github.com/prefix-dev/rattler-build/pull/1367
           then: true
           else:
-            # remove symlinks in sources on windows by copying; delete target first
-            - del /s /q extra\accel\ane\lib\h11ane.h
-            - del /s /q extra\accel\ane\lib\entitlements.xml
-            - del /s /q extra\accel\ane\2_compile\ane.py
-            - del /s /q extra\accel\ane\2_compile\aneregs.json
-            - copy /Y extra\accel\ane\3_run\h11ane.h extra\accel\ane\lib\h11ane.h
-            - copy /Y extra\accel\ane\3_run\entitlements.xml extra\accel\ane\lib\entitlements.xml
-            - copy /Y extra\accel\ane\lib\ane.py extra\accel\ane\2_compile\ane.py
-            - copy /Y extra\accel\ane\lib\aneregs.json extra\accel\ane\2_compile\aneregs.json
+            - echo "nothing"
 
     requirements:
       run:
