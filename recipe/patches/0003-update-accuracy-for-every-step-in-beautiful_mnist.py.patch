@@ -1,4 +1,4 @@
-From 925128e393ff96124233d1b32a0787f9a3271ef9 Mon Sep 17 00:00:00 2001
+From 4ff0ff5eab2aa2eebd9bc7628eb63a26b094f495 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Wed, 17 Dec 2025 22:59:20 +1100
 Subject: [PATCH 3/3] update accuracy for every step in beautiful_mnist.py
@@ -8,10 +8,10 @@ Subject: [PATCH 3/3] update accuracy for every step in beautiful_mnist.py
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/examples/beautiful_mnist.py b/examples/beautiful_mnist.py
-index b5c834ef0..261d844b9 100644
+index 0a73f5101..37c018351 100644
 --- a/examples/beautiful_mnist.py
 +++ b/examples/beautiful_mnist.py
-@@ -41,7 +41,7 @@ if __name__ == "__main__":
+@@ -38,7 +38,7 @@ if __name__ == "__main__":
    for i in (t:=trange(getenv("STEPS", 70))):
      GlobalCounters.reset()   # NOTE: this makes it nice for DEBUG=2 timing
      loss = train_step()
