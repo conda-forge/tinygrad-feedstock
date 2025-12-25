@@ -1,0 +1,22 @@
+From 5d29d7d654f66f82745bc1eda58b8d39d4c98984 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 25 Dec 2025 11:54:57 +1100
+Subject: [PATCH 4/4] skip GPU device on windows
+
+---
+ tinygrad/device.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tinygrad/device.py b/tinygrad/device.py
+index 9bfe5e7fb..3c02d8bd6 100644
+--- a/tinygrad/device.py
++++ b/tinygrad/device.py
+@@ -10,7 +10,7 @@ from tinygrad.renderer import Renderer
+ 
+ # **************** Device ****************
+ 
+-ALL_DEVICES = ["METAL", "AMD", "NV", "CUDA", "QCOM", "GPU", "CPU", "LLVM", "DSP", "WEBGPU"]
++ALL_DEVICES = ["METAL", "AMD", "NV", "CUDA", "QCOM", "CPU", "LLVM", "DSP", "WEBGPU"]
+ class _Device:
+   def __init__(self) -> None:
+     self._devices = [x.stem[len("ops_"):].upper() for x in (pathlib.Path(__file__).parent/"runtime").iterdir() if x.stem.startswith("ops_")]
