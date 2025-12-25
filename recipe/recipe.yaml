@@ -49,6 +49,8 @@ outputs:
         - python
         - llvmdev
         - clangxx_${{ target_platform }}
+        # ensure `bin/clang` symlink is present
+        - clang
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
