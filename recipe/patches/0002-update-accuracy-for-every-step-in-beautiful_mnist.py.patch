@@ -1,0 +1,22 @@
+From 7961e8b2c94c076d198ec9546983746eeccc7015 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Wed, 17 Dec 2025 22:59:20 +1100
+Subject: [PATCH 2/6] update accuracy for every step in beautiful_mnist.py
+
+---
+ examples/beautiful_mnist.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/beautiful_mnist.py b/examples/beautiful_mnist.py
+index 39c1cf255..ec0cb919f 100644
+--- a/examples/beautiful_mnist.py
++++ b/examples/beautiful_mnist.py
+@@ -38,7 +38,7 @@ if __name__ == "__main__":
+   for i in (t:=trange(getenv("STEPS", 70))):
+     GlobalCounters.reset()   # NOTE: this makes it nice for DEBUG=2 timing
+     loss = train_step()
+-    if i%10 == 9: test_acc = get_test_acc().item()
++    test_acc = get_test_acc().item()
+     t.set_description(f"loss: {loss.item():6.2f} test_accuracy: {test_acc:5.2f}%")
+ 
+   # verify eval acc

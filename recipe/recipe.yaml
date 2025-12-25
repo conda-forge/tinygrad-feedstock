@@ -15,28 +15,21 @@ source:
     # sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
     patches:
       - patches/0001-point-to-our-own-llvmdev.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
-      - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
       # see more clearly what's happening in mnist test
-      - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+      - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
-      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+      - patches/0003-make-apple-disassembler-runnable-when-installed.patch
       - if: osx and x86_64
         then:
           # disable metal on osx
-          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+          - patches/0004-default-to-CPU-as-device-on-osx-64-remove-metal.patch
       - if: osx and arm64
         then:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
-          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/13381
-      - patches/0007-torch-backend-no-aten.detach-for-torch-2.10-compat-1.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/13543
-      # avoid multi-GPU tests and failure in new pytorch due to eps=0
-      - patches/0008-add-needs_second_gpu-decorator-13543.patch
+          - patches/0005-skip-metal-disassembly-for-vanilla-clang.patch
       # help nvcc find target-specific headers
-      - patches/0009-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+      - patches/0006-add-target_dir-based-include-paths-for-CUDA-compiler.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
