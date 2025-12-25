@@ -1,0 +1,30 @@
+From adc5c958c438e8d02f1e5f1e8a53a12a8b90616e Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sun, 4 Jan 2026 17:02:07 +1100
+Subject: [PATCH 4/7] make apple disassembler runnable when installed
+
+upstream has both `<repo_root>/extra/disassemblers` and `<repo_root>/tinygrad/extra/disassemblers/`, c.f.
+https://github.com/tinygrad/tinygrad/blob/v0.11.0/.github/workflows/benchmark.yml#L42
+
+When installed into site-packages, we're calling from
+$SP_DIR/tinygrad/runtime/ops_metal.py
+and want to go to
+$SP_DIR/tinygrad/extra/...
+so reflect that in the folder-hierarchy traversal.
+---
+ tinygrad/runtime/ops_metal.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tinygrad/runtime/ops_metal.py b/tinygrad/runtime/ops_metal.py
+index 27169410f..da8295738 100644
+--- a/tinygrad/runtime/ops_metal.py
++++ b/tinygrad/runtime/ops_metal.py
+@@ -108,7 +108,7 @@ class MetalCompiler(Compiler):
+     with tempfile.NamedTemporaryFile(delete=True) as shader:
+       shader.write(lib)
+       shader.flush()
+-      proc = subprocess.Popen(f"cd {pathlib.Path(__file__).parents[2]}/extra/disassemblers/applegpu && python3 compiler_explorer.py {shader.name}",
++      proc = subprocess.Popen(f"cd {pathlib.Path(__file__).parents[1]}/extra/disassemblers/applegpu && python3 compiler_explorer.py {shader.name}",
+                               stdout=subprocess.PIPE, shell=True, text=True, bufsize=1)
+       for line in unwrap(proc.stdout): print(line, end="")
+       ret = proc.wait()
