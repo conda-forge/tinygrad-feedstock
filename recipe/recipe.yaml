@@ -10,7 +10,7 @@ recipe:
 
 source:
   git: https://github.com/tinygrad/tinygrad.git
-  rev: "54af29dbdb6c266bae2590e68d4a0b2c5e61279c"
+  rev: "f1111ac7de423a1aa646025c70d7b9e4d64c0a9c"
   # url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
   # sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
   patches:
