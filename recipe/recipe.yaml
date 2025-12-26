@@ -53,6 +53,8 @@ outputs:
         - clangxx_${{ target_platform }}
         # tinygrad wants headers from `include/clang-c`; also ensure `bin/clang` symlink is present
         - clangdev
+        # avoid solver choosing ancient clang versions like `clangdev-5.0.0-flang_3`
+        - clangdev >18
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
