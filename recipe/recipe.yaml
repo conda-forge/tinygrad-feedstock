@@ -34,6 +34,7 @@ build:
     - build_platform != host_platform
     # already green
     - win
+    - osx
 
 outputs:
   - package:
@@ -82,6 +83,9 @@ outputs:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      - script:
+         # we cannot do a bare import test, because syscall isn't a package
+         - python -c "from tinygrad.runtime.autogen.libc import syscall"
 
   - package:
       name: tinygrad-tests
