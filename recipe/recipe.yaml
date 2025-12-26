@@ -71,6 +71,8 @@ outputs:
         - clangxx_${{ host_platform }}
         # ensure `bin/clang` symlink is present
         - clang
+        # avoid solver choosing ancient clang versions
+        - clang >18
         - if: cuda_compiler_version != "None"
           then:
             - __cuda
