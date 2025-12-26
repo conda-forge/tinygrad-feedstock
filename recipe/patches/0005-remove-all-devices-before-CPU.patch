@@ -1,4 +1,4 @@
-From bf9c9a6c53d654fd6b8207eaad8ea095b264a2d0 Mon Sep 17 00:00:00 2001
+From 2ac4734309bf5e05988cc7d1397a9d5738606118 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 25 Dec 2025 16:54:26 +1100
 Subject: [PATCH 5/5] remove all devices before CPU

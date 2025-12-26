@@ -1,11 +1,12 @@
-From ef7ca6ac27420a468362e3d62a93052710978f8a Mon Sep 17 00:00:00 2001
+From c51699d9bb3b07cf9bb4d56b431802653b38cf5e Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 26 Dec 2025 10:46:26 +1100
 Subject: [PATCH 3/5] use our standard sysroots
 
 ---
  tinygrad/runtime/autogen/__init__.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ tinygrad/runtime/support/c.py        | 11 +++++++++--
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
 index bac164a56..46feb0bdb 100644
@@ -39,3 +40,32 @@ index bac164a56..46feb0bdb 100644
      case "avcodec": return load("avcodec", None, ["{}/libavcodec/hevc/hevc.h", "{}/libavcodec/cbs_h265.h"], tarball=ffmpeg_src)
      case "opencl": return load("opencl", "'OpenCL'", ["/usr/include/CL/cl.h"])
      case "cuda": return load("cuda", "'cuda'", ["/usr/include/cuda.h"], args=["-D__CUDA_API_VERSION_INTERNAL"], parse_macros=False)
+diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
+index 9f99e783a..7bfa0a9fc 100644
+--- a/tinygrad/runtime/support/c.py
++++ b/tinygrad/runtime/support/c.py
+@@ -37,15 +37,22 @@ def CEnum(typ: type[ctypes._SimpleCData]):
+ 
+   return _CEnum
+ 
++CONDA_PREFIX = os.environ.get('CONDA_PREFIX', None)
++CONDA_BUILD_SYSROOT = os.environ.get('CONDA_BUILD_SYSROOT', None)
++if CONDA_PREFIX is not None:
++  # if present, turn into full path; windows has a different layout
++  CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CONDA_PREFIX)
++
+ class DLL(ctypes.CDLL):
+   @staticmethod
+   def findlib(nm:str, paths:list[str], extra_paths=[]):
+     if nm == 'libc' and OSX: return '/usr/lib/libc.dylib'
+     if pathlib.Path(path:=getenv(nm.replace('-', '_').upper()+"_PATH", '')).is_file(): return path
+     for p in paths:
+-      libpaths = {"posix": ["/usr/lib", "/usr/local/lib"], "nt": os.environ['PATH'].split(os.pathsep),
++      libpaths = {"posix": [CONDA_PREFIX/"lib", "/usr/lib", "/usr/local/lib"],
++                  "nt": [CONDA_PREFIX/"bin"] + os.environ['PATH'].split(os.pathsep),
+                   "darwin": ["/opt/homebrew/lib", f"/System/Library/Frameworks/{p}.framework"],
+-                  'linux': ['/lib', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
++                  'linux': [CONDA_BUILD_SYSROOT]*(CONDA_BUILD_SYSROOT is not None) + ['/lib', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
+       if (pth:=pathlib.Path(p)).is_absolute():
+         if pth.is_file(): return p
+         else: continue
