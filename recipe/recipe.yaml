@@ -84,6 +84,7 @@ outputs:
             - tinygrad.runtime.autogen.llvm
           pip_check: true
       - script:
+         - cat $SP_DIR/tinygrad/runtime/autogen/libc.py
          # we cannot do a bare import test, because syscall isn't a package
          - python -c "from tinygrad.runtime.autogen.libc import syscall"
 
