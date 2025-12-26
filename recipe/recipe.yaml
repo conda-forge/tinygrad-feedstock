@@ -27,6 +27,7 @@ source:
     - if: osx
       then:
         - patches/0006-do-not-JIT-test-accuracy-on-osx.patch
+        - patches/0007-remove-all-devices-before-CPU.patch
 
 build:
   number: ${{ build_number }}
