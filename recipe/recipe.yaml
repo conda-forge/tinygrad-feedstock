@@ -73,6 +73,13 @@ outputs:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      - script:
+          - if: linux
+            then:
+              # cannot do a bare import test, because libc.syscall is a member, not a package
+              - python -c "from tinygrad.runtime.autogen.libc import syscall"
+            else:
+              - echo nothing
 
   - package:
       name: tinygrad-tests
