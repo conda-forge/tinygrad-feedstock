@@ -21,6 +21,10 @@ source:
     - patches/0003-use-our-standard-sysroots.patch
     # DEBUG
     - patches/0004-do-not-JIT-test-accuracy-on-osx.patch
+    # DEBUG:
+    - if: osx
+      then:
+        - patches/0005-remove-all-devices-before-CPU.patch
 
 build:
   number: ${{ build_number }}
