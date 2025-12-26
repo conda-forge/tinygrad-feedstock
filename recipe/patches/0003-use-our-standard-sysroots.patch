@@ -1,0 +1,41 @@
+From ef7ca6ac27420a468362e3d62a93052710978f8a Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Fri, 26 Dec 2025 10:46:26 +1100
+Subject: [PATCH 3/4] use our standard sysroots
+
+---
+ tinygrad/runtime/autogen/__init__.py | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
+index bac164a56..46feb0bdb 100644
+--- a/tinygrad/runtime/autogen/__init__.py
++++ b/tinygrad/runtime/autogen/__init__.py
+@@ -12,7 +12,8 @@ nv_src = {"nv_570": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/8
+           "nv_580": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/2af9f1f0f7de4988432d4ae875b5858ffdb09cc2.tar.gz"}
+ ffmpeg_src = "https://ffmpeg.org/releases/ffmpeg-8.0.1.tar.gz"
+ rocr_src = "https://github.com/ROCm/rocm-systems/archive/refs/tags/rocm-7.1.1.tar.gz"
+-macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
++CONDA_BUILD_SYSROOT = os.environ.get('CONDA_BUILD_SYSROOT', None)
++macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" if CONDA_BUILD_SYSROOT is None else CONDA_BUILD_SYSROOT
+ 
+ llvm_lib = (r"'C:\\Program Files\\LLVM\\bin\\LLVM-C.dll' if WIN else '/opt/homebrew/opt/llvm@20/lib/libLLVM.dylib' if OSX else " +
+             repr(['LLVM'] + [f'LLVM-{i}' for i in reversed(range(14, 21+1))]))
+@@ -38,9 +39,14 @@ def load(name, dll, files, **kwargs):
+ 
+ def __getattr__(nm):
+   match nm:
+-    case "libc": return load("libc", "'c'", lambda: (
+-      [i for i in system("dpkg -L libc6-dev").split() if 'sys/mman.h' in i or 'sys/syscall.h' in i] +
+-      ["/usr/include/string.h", "/usr/include/elf.h", "/usr/include/unistd.h", "/usr/include/asm-generic/mman-common.h"]), errno=True)
++    case "libc":
++      if CONDA_BUILD_SYSROOT is None:
++        return load("libc", "'c'", lambda: (
++          [i for i in system("dpkg -L libc6-dev").split() if 'sys/mman.h' in i or 'sys/syscall.h' in i] +
++          ["/usr/include/string.h", "/usr/include/elf.h", "/usr/include/unistd.h", "/usr/include/asm-generic/mman-common.h"]), errno=True)
++      else:
++        return load("libc", "'c'", [f"{CONDA_BUILD_SYSROOT}/usr/include/{i}" for i in
++          ["sys/mman.h", "sys/syscall.h", "string.h", "elf.h", "unistd.h", "asm-generic/mman-common.h"]], errno=True)
+     case "avcodec": return load("avcodec", None, ["{}/libavcodec/hevc/hevc.h", "{}/libavcodec/cbs_h265.h"], tarball=ffmpeg_src)
+     case "opencl": return load("opencl", "'OpenCL'", ["/usr/include/CL/cl.h"])
+     case "cuda": return load("cuda", "'cuda'", ["/usr/include/cuda.h"], args=["-D__CUDA_API_VERSION_INTERNAL"], parse_macros=False)
