@@ -18,7 +18,7 @@ source:
     # see more clearly what's happening in mnist test
     - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
     # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
-    - patches/0003-use-our-standard-sysroots.patch
+    - patches/0003-use-our-standard-macos-sdk.patch
     # DEBUG
     - patches/0004-do-not-JIT-test-accuracy-on-osx.patch
     # DEBUG:
