@@ -1,17 +1,25 @@
-From 0559fe3f9408e6c095b572b15399b2382a875f5d Mon Sep 17 00:00:00 2001
+From 8e321b26f58180f06a91a4d21aa878db83a18ff2 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sun, 28 Dec 2025 14:44:16 +1100
 Subject: [PATCH 7/7] debug
 
 ---
- tinygrad/runtime/support/c.py | 1 +
- 1 file changed, 1 insertion(+)
+ tinygrad/runtime/support/c.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
-index dc474dcd4..366912aa5 100644
+index dc474dcd4..3c7aede3b 100644
 --- a/tinygrad/runtime/support/c.py
 +++ b/tinygrad/runtime/support/c.py
-@@ -61,6 +61,7 @@ class DLL(ctypes.CDLL):
+@@ -44,6 +44,7 @@ CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CON
+ class DLL(ctypes.CDLL):
+   @staticmethod
+   def findlib(nm:str, paths:list[str], extra_paths=[]):
++    print(f"{nm=}, {paths=}, {extra_paths=}")
+     if nm == 'libc' and OSX: return '/usr/lib/libc.dylib'
+     if pathlib.Path(path:=getenv(nm.replace('-', '_').upper()+"_PATH", '')).is_file(): return path
+     for p in paths:
+@@ -61,6 +62,7 @@ class DLL(ctypes.CDLL):
              if (l:=pre / base).is_file() or (OSX and 'framework' in str(l) and l.is_symlink()): return str(l)
          else:
            for l in (l for l in pre.iterdir() if l.is_file() and re.fullmatch(f"lib{p}\\.so\\.?[0-9]*", l.name)):
