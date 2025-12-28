@@ -1,17 +1,17 @@
-From 0557eb24e313c23134f63e3fb55fba218707e717 Mon Sep 17 00:00:00 2001
+From 7d28e4b3dabf5343940916a2f50b4c214ec20121 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sun, 28 Dec 2025 14:44:16 +1100
 Subject: [PATCH 7/7] debug
 
 ---
- tinygrad/runtime/support/c.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tinygrad/runtime/support/c.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
-index dc474dcd4..c4a078369 100644
+index dc474dcd4..c8151cb56 100644
 --- a/tinygrad/runtime/support/c.py
 +++ b/tinygrad/runtime/support/c.py
-@@ -44,8 +44,11 @@ CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CON
+@@ -44,23 +44,30 @@ CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CON
  class DLL(ctypes.CDLL):
    @staticmethod
    def findlib(nm:str, paths:list[str], extra_paths=[]):
@@ -24,7 +24,19 @@ index dc474dcd4..c4a078369 100644
      for p in paths:
        libpaths = {"posix": [CONDA_PREFIX/"lib", "/usr/lib", "/usr/local/lib"],
                    "nt": [CONDA_PREFIX/"bin"] + os.environ['PATH'].split(os.pathsep),
-@@ -61,6 +64,7 @@ class DLL(ctypes.CDLL):
+                   "darwin": ["/opt/homebrew/lib", f"/System/Library/Frameworks/{p}.framework"],
+                   'linux': ['/lib', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
+       if (pth:=pathlib.Path(p)).is_absolute():
+-        if pth.is_file(): return p
++        if pth.is_file():
++          print(f"found absolute path {pth}")
++          return p
+         else: continue
+       for pre in (pathlib.Path(pre) for pre in ([path] if path else []) + libpaths.get(os.name, []) + libpaths.get(sys.platform, []) + extra_paths):
++        print(f"{pre=}, {p=}")
+         if not pre.is_dir(): continue
+         if WIN or OSX:
+           for base in ([f"lib{p}.dylib", f"{p}.dylib", str(p)] if OSX else [f"{p}.dll"]):
              if (l:=pre / base).is_file() or (OSX and 'framework' in str(l) and l.is_symlink()): return str(l)
          else:
            for l in (l for l in pre.iterdir() if l.is_file() and re.fullmatch(f"lib{p}\\.so\\.?[0-9]*", l.name)):
