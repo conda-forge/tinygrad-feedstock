@@ -17,15 +17,17 @@ source:
     - patches/0001-point-to-our-own-llvmdev.patch
     # see more clearly what's happening in mnist test
     - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+    # lookin CONDA_PREFIX
+    - patches/0003-look-for-libraries-in-PREFIX-first.patch
     # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
-    - patches/0003-use-our-standard-macos-sdk.patch
-    - patches/0006-look-for-libraries-in-PREFIX-first.patch
-    - patches/0007-debug.patch
+    - patches/0004-use-our-standard-macos-sdk.patch
+    # backport https://github.com/tinygrad/tinygrad/pull/13863
+    - patches/0005-also-look-for-linux-libraries-in-RHEL-themed-paths.patch
     # DEBUG:
     - if: osx
       then:
-        - patches/0004-do-not-JIT-test-accuracy-on-osx.patch
-        - patches/0005-remove-all-devices-before-CPU.patch
+        - patches/0006-do-not-JIT-test-accuracy-on-osx.patch
+        - patches/0007-remove-all-devices-before-CPU.patch
 
 build:
   number: ${{ build_number }}
