@@ -1,0 +1,21 @@
+From 0559fe3f9408e6c095b572b15399b2382a875f5d Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sun, 28 Dec 2025 14:44:16 +1100
+Subject: [PATCH 7/7] debug
+
+---
+ tinygrad/runtime/support/c.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
+index dc474dcd4..366912aa5 100644
+--- a/tinygrad/runtime/support/c.py
++++ b/tinygrad/runtime/support/c.py
+@@ -61,6 +61,7 @@ class DLL(ctypes.CDLL):
+             if (l:=pre / base).is_file() or (OSX and 'framework' in str(l) and l.is_symlink()): return str(l)
+         else:
+           for l in (l for l in pre.iterdir() if l.is_file() and re.fullmatch(f"lib{p}\\.so\\.?[0-9]*", l.name)):
++            print(f"considering file {l}")
+             # filter out linker scripts
+             with open(l, 'rb') as f:
+               if f.read(4) == b'\x7FELF': return str(l)

@@ -19,11 +19,12 @@ source:
     - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
     # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
     - patches/0003-use-our-standard-macos-sdk.patch
-    # DEBUG
-    - patches/0004-do-not-JIT-test-accuracy-on-osx.patch
+    - patches/0006-look-for-libraries-in-PREFIX-first.patch
+    - patches/0007-debug.patch
     # DEBUG:
     - if: osx
       then:
+        - patches/0004-do-not-JIT-test-accuracy-on-osx.patch
         - patches/0005-remove-all-devices-before-CPU.patch
 
 build:
