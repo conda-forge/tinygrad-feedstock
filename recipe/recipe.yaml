@@ -21,6 +21,8 @@ source:
     - patches/0003-use-our-standard-macos-sdk.patch
     # search CONDA_PREFIX first
     - patches/0004-look-for-libraries-in-PREFIX-first.patch
+    # backport https://github.com/tinygrad/tinygrad/pull/13863
+    - patches/0005-also-look-for-linux-libraries-in-RHEL-themed-paths.patch
 
 build:
   number: ${{ build_number }}
