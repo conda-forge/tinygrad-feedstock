@@ -19,19 +19,21 @@ source:
       - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
       - patches/0003-use-our-standard-macos-sdk.patch
+      # search CONDA_PREFIX first
+      - patches/0004-look-for-libraries-in-PREFIX-first.patch
       # ensure we find vendored applegpu
-      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+      - patches/0005-make-apple-disassembler-runnable-when-installed.patch
       - if: osx and x86_64
         then:
           # disable metal on osx
-          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+          - patches/0006-default-to-CPU-as-device-on-osx-64-remove-metal.patch
       - if: osx and arm64
         then:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
-          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
+          - patches/0007-skip-metal-disassembly-for-vanilla-clang.patch
       # help nvcc find target-specific headers
-      - patches/0007-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+      - patches/0008-add-target_dir-based-include-paths-for-CUDA-compiler.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu

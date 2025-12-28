@@ -1,7 +1,7 @@
 From 6eb4419a10a20bb641564f538c9864947069d06e Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Mon, 27 Oct 2025 15:37:17 +0100
-Subject: [PATCH 1/7] point to our own llvmdev
+Subject: [PATCH 1/8] point to our own llvmdev
 
 ---
  tinygrad/runtime/autogen/__init__.py | 28 ++++++++++++++++++++++------
