@@ -1,0 +1,22 @@
+From de057f3e9e57270cdaa4cea9d6f48e657dec66e3 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Mon, 29 Dec 2025 09:49:25 +1100
+Subject: [PATCH 5/5] also look for linux libraries in RHEL-themed paths
+
+---
+ tinygrad/runtime/support/c.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
+index dc474dcd4..6dad95f47 100644
+--- a/tinygrad/runtime/support/c.py
++++ b/tinygrad/runtime/support/c.py
+@@ -50,7 +50,7 @@ class DLL(ctypes.CDLL):
+       libpaths = {"posix": [CONDA_PREFIX/"lib", "/usr/lib", "/usr/local/lib"],
+                   "nt": [CONDA_PREFIX/"bin"] + os.environ['PATH'].split(os.pathsep),
+                   "darwin": ["/opt/homebrew/lib", f"/System/Library/Frameworks/{p}.framework"],
+-                  'linux': ['/lib', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
++                  'linux': ['/lib', '/lib64', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
+       if (pth:=pathlib.Path(p)).is_absolute():
+         if pth.is_file(): return p
+         else: continue

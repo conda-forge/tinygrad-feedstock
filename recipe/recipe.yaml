@@ -1,5 +1,5 @@
 context:
-  version: "0.11.0"
+  version: "0.11.1dev"
   build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
@@ -9,18 +9,26 @@ recipe:
   version: ${{ version }}
 
 source:
-  url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
+  git: https://github.com/tinygrad/tinygrad.git
+  rev: "f5090192c84760be1227f7e3c4f99ad0603117ae"
+  # url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
+  # sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
   patches:
     - patches/0001-point-to-our-own-llvmdev.patch
-    # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
-    - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
     # see more clearly what's happening in mnist test
-    - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+    - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+    # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
+    - patches/0003-use-our-standard-macos-sdk.patch
+    # search CONDA_PREFIX first
+    - patches/0004-look-for-libraries-in-PREFIX-first.patch
+    # backport https://github.com/tinygrad/tinygrad/pull/13863
+    - patches/0005-also-look-for-linux-libraries-in-RHEL-themed-paths.patch
 
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  skip:
+    - match(python, "<3.11")
 
 outputs:
   - package:
@@ -47,20 +55,37 @@ outputs:
         - python
         - llvmdev
         - clangxx_${{ target_platform }}
-        # ensure `bin/clang` symlink is present
-        - clang
+        # tinygrad wants headers from `include/clang-c`; also ensure `bin/clang` symlink is present
+        - clangdev
+        # avoid solver choosing ancient clang versions like `clangdev-5.0.0-flang_3`
+        - clangdev >18
         - if: cuda_compiler_version != "None"
           then:
             - cuda-nvcc_${{ target_platform }}
             - if: linux
               then:
                 - triton
+      run_constraints:
+        - if: linux
+          then:
+            # avoid wrong compiler activation that interferes with clang_<target>
+            - gcc_linux-64 <0.0a0
+            - gxx_linux-64 <0.0a0
+            - gcc_linux-aarch64 <0.0a0
+            - gxx_linux-aarch64 <0.0a0
     tests:
       - python:
           imports:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      - script:
+          - if: linux
+            then:
+              # cannot do a bare import test, because libc.syscall is a member, not a package
+              - python -c "from tinygrad.runtime.autogen.libc import syscall"
+            else:
+              - echo nothing
 
   - package:
       name: tinygrad-tests
@@ -106,6 +131,7 @@ outputs:
             - onnx2torch
             - onnx
             - onnxruntime
+            - openai
             - pandas
             - py-opencv
             - pybind11
@@ -138,6 +164,10 @@ outputs:
                 - 'tests_to_skip += " or test_backward_sum_acc_dtype"'
                 # cannot load onnx model from some temporary location
                 - 'tests_to_skip += " or (TestQuantizeOnnxCPU and test_quant_128)"'
+                # No such file or directory: '/tmp/tmpqhndyk1l.so'
+                - 'tests_to_skip += " or test_bitfield_interop or test_packed_struct_interop"'
+                # mismatch in expected number of relocations
+                - 'tests_to_skip += " or test_load_clang_jit_strtab"'
             - if: linux and cuda_compiler_version != "None"
               then:
                 # RuntimeError: Attribute list does not match Module context!
@@ -166,7 +196,7 @@ outputs:
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == target_platform
               then:
-                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
+                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50", "--maxfail=20"]))'
 
       # simpler test that only runs one example;
       # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
