@@ -228,6 +228,11 @@ outputs:
             then:
               # loss decreases as expected, but accuracy appears to be mis-computed
               - unset TARGET_EVAL_ACC_PCT
+              - export DEBUG=2
+          - python ./examples/beautiful_mnist.py
+          # redo without debug but with TARGET_EVAL_ACC_PCT
+          - export TARGET_EVAL_ACC_PCT=90
+          - unset DEBUG
           - python ./examples/beautiful_mnist.py
 
 about:
