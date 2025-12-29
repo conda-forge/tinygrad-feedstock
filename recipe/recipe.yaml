@@ -199,6 +199,8 @@ outputs:
                 - 'tests_to_skip += " or test_putotherprocess"'
                 # running into weakly-referenced object no longer exists
                 - 'tests_to_skip += " or TestGC or test_gc"'
+                # doesn't work on CPU device, apparently
+                - 'tests_to_skip += " or test_jit_split_simple"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == target_platform
