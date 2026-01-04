@@ -124,7 +124,7 @@ outputs:
               # reduce number of steps in emulation
               - export STEPS=3
               - export TARGET_EVAL_ACC_PCT=30
-          - if: osx
+          - if: osx and x86_64
             then:
               # loss decreases as expected, but accuracy appears to be mis-computed
               - unset TARGET_EVAL_ACC_PCT
@@ -222,6 +222,16 @@ outputs:
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
             - if: osx
               then:
+                # beam-related stuff seems to hang
+                - 'tests_to_skip += " or TestBEAM or test_beam"'
+                # another apparent hang
+                - 'tests_to_skip += " or test_getotherprocess"'
+                # forking too early
+                - 'tests_to_skip += " or test_putotherprocess"'
+                # running into weakly-referenced object no longer exists
+                - 'tests_to_skip += " or TestGC or test_gc"'
+            - if: osx and x86_64
+              then:
                 # signed int32 overflow
                 - 'tests_to_skip += " or test_float_midcast_int32"'
                 # tinygrad.codegen.kernel.KernelOptError: must have tensor cores or TC=2
@@ -232,14 +242,6 @@ outputs:
                 - 'tests_to_skip += " or test_conv2d_fused"'
                 # flaky hypothesis test
                 - 'tests_to_skip += " or test_float_cast_to_unsigned"'
-                # beam-related stuff seems to hang
-                - 'tests_to_skip += " or TestBEAM or test_beam"'
-                # another apparent hang
-                - 'tests_to_skip += " or test_getotherprocess"'
-                # forking too early
-                - 'tests_to_skip += " or test_putotherprocess"'
-                # running into weakly-referenced object no longer exists
-                - 'tests_to_skip += " or TestGC or test_gc"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == host_platform
