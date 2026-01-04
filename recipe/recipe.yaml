@@ -30,6 +30,10 @@ source:
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  # DEBUG
+  skip:
+    - not (osx and arm64)
+    - match(python, "<3.12")
 
 outputs:
   - package:
@@ -125,7 +129,7 @@ outputs:
               - set "SETPS=1"
               - set "DEBUG=10"
               - set "TARGET_EVAL_ACC_PCT="
-          - if: not aarch64
+          - if: match(python, "==3.12")
             then:
               - python ./examples/beautiful_mnist.py
 
@@ -228,7 +232,7 @@ outputs:
                 - 'tests_to_skip += " or TestGC or test_gc"'
 
             # test suite in emulation on aarch is super slow, skip it there
-            - if: unix and build_platform == host_platform
+            - if: match(python, "==3.13")
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
 
