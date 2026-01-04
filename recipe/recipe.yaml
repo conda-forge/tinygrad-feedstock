@@ -61,6 +61,30 @@ outputs:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      # integration-test in addition to test suite below
+      - files:
+          source:
+            - examples/beautiful_mnist.py
+        script:
+          # reduce number of steps; we just need to show that it's functional
+          # however, accuracy should at least trend in the right direction
+          - if: unix
+            then:
+              - export STEPS=25
+              - export TARGET_EVAL_ACC_PCT=90
+            else:
+              - set "STEPS=25"
+              - set "TARGET_EVAL_ACC_PCT=90"
+          - if: aarch64
+            then:
+              # reduce number of steps in emulation
+              - export STEPS=3
+              - export TARGET_EVAL_ACC_PCT=30
+          - if: osx
+            then:
+              # loss decreases as expected, but accuracy appears to be mis-computed
+              - unset TARGET_EVAL_ACC_PCT
+          - python ./examples/beautiful_mnist.py
 
   - package:
       name: tinygrad-tests
@@ -167,32 +191,6 @@ outputs:
             - if: unix and build_platform == target_platform
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
-
-      # simpler test that only runs one example;
-      # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
-      - files:
-          source:
-            - examples/beautiful_mnist.py
-        script:
-          # reduce number of steps; we just need to show that it's functional
-          # however, accuracy should at least trend in the right direction
-          - if: unix
-            then:
-              - export STEPS=25
-              - export TARGET_EVAL_ACC_PCT=90
-            else:
-              - set "STEPS=25"
-              - set "TARGET_EVAL_ACC_PCT=90"
-          - if: aarch64
-            then:
-              # reduce number of steps in emulation
-              - export STEPS=3
-              - export TARGET_EVAL_ACC_PCT=30
-          - if: osx
-            then:
-              # loss decreases as expected, but accuracy appears to be mis-computed
-              - unset TARGET_EVAL_ACC_PCT
-          - python ./examples/beautiful_mnist.py
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
