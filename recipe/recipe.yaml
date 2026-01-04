@@ -1,6 +1,6 @@
 context:
   version: "0.11.0"
-  build_number: 0
+  build_number: 1
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
 
@@ -9,14 +9,21 @@ recipe:
   version: ${{ version }}
 
 source:
-  url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
-  patches:
-    - patches/0001-point-to-our-own-llvmdev.patch
-    # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
-    - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
-    # see more clearly what's happening in mnist test
-    - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+  - url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
+    sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
+    patches:
+      - patches/0001-point-to-our-own-llvmdev.patch
+      # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
+      - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
+      # see more clearly what's happening in mnist test
+      - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+      # ensure we find vendored applegpu
+      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+  - if: osx
+    then:
+      - target_directory: tinygrad/extra/disassemblers/applegpu
+        git: https://github.com/dougallj/applegpu
+        rev: "797862eea0cee1f1eba74be3d0d02be4b3d2bd0d"
 
 build:
   number: ${{ build_number }}
@@ -26,41 +33,99 @@ outputs:
   - package:
       name: tinygrad
     build:
-      script: python -m pip install . -vv
+      script:
+        - python -m pip install . -vv
+        - if: false
+          then:
+            - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
+            - cp -R ./tinygrad/extra/disassemblers/applegpu/* $SP_DIR/tinygrad/extra/disassemblers/applegpu
+            - cd $SP_DIR/tinygrad/extra/disassemblers/applegpu/compiler_explorer_tools
+            - make
     requirements:
       build:
-        - if: build_platform != target_platform
+        - if: build_platform != host_platform
           then:
             - python
-            - cross-python_${{ target_platform }}
+            - cross-python_${{ host_platform }}
         # this is just here so smithy creates separate jobs for the CUDA variants
         - if: cuda_compiler_version != "None"
           then:
             - ${{ stdlib("c") }}
             - ${{ compiler("cxx") }}
             - ${{ compiler("cuda") }}
+        - if: osx
+          then:
+            - make
+            # for bare clang/clang++ symlinks, see
+            # https://github.com/dougallj/applegpu/blob/main/compiler_explorer_tools/Makefile
+            - clang
+            - clangxx
       host:
         - python
         - pip
         - setuptools
       run:
         - python
+        - capstone
         - llvmdev
-        - clangxx_${{ target_platform }}
+        - clangxx_${{ host_platform }}
         # ensure `bin/clang` symlink is present
         - clang
         - if: cuda_compiler_version != "None"
           then:
-            - cuda-nvcc_${{ target_platform }}
+            - __cuda
+            - cuda-nvcc_${{ host_platform }}
             - if: linux
               then:
                 - triton
+      run_constraints:
+        - if: win
+          then:
+            # avoid pulling in old MSVC activation
+            - vs2019_win-64 <0.0a0
     tests:
       - python:
           imports:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      # integration-test in addition to test suite below
+      - files:
+          source:
+            - examples/beautiful_mnist.py
+        script:
+          # reduce number of steps; we just need to show that it's functional
+          # however, accuracy should at least trend in the right direction
+          - if: unix
+            then:
+              - export STEPS=25
+              - export TARGET_EVAL_ACC_PCT=90
+            else:
+              - set "STEPS=25"
+              - set "TARGET_EVAL_ACC_PCT=90"
+          - if: aarch64
+            then:
+              # reduce number of steps in emulation
+              - export STEPS=3
+              - export TARGET_EVAL_ACC_PCT=30
+          - if: osx
+            then:
+              # loss decreases as expected, but accuracy appears to be mis-computed
+              - unset TARGET_EVAL_ACC_PCT
+          - python ./examples/beautiful_mnist.py
+          # run again with high DEBUG value; exercises different paths, e.g. needs capstone
+          - if: unix
+            then:
+              - export STEPS=1
+              - export DEBUG=10
+              - unset TARGET_EVAL_ACC_PCT
+            else:
+              - set "SETPS=1"
+              - set "DEBUG=10"
+              - set "TARGET_EVAL_ACC_PCT="
+          - if: not aarch64
+            then:
+              - python ./examples/beautiful_mnist.py
 
   - package:
       name: tinygrad-tests
@@ -91,9 +156,6 @@ outputs:
             - blobfile
             - boto3
             - bottle
-            - if: x86_64
-              then:
-                - capstone
             # https://github.com/conda-forge/staged-recipes/issues/29179
             # - ggml-python
             - if: unix
@@ -164,39 +226,9 @@ outputs:
                 - 'tests_to_skip += " or TestGC or test_gc"'
 
             # test suite in emulation on aarch is super slow, skip it there
-            - if: unix and build_platform == target_platform
+            - if: unix and build_platform == host_platform
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
-
-      # simpler test that only runs one example;
-      # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
-      - files:
-          source:
-            - examples/
-        script:
-          # reduce number of steps; we just need to show that it's functional
-          # however, accuracy should at least trend in the right direction
-          - if: unix
-            then:
-              - export STEPS=25
-              - export TARGET_EVAL_ACC_PCT=90
-            else:
-              - set "STEPS=25"
-              - set "TARGET_EVAL_ACC_PCT=90"
-              # remove extraneous clang's in image, c.f.
-              # https://github.com/conda-forge/conda-forge-ci-setup-feedstock/pull/408
-              - rmdir /s /q "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm"
-              - rmdir /s /q "C:\Program Files\LLVM"
-          - if: aarch64
-            then:
-              # reduce number of steps in emulation
-              - export STEPS=3
-              - export TARGET_EVAL_ACC_PCT=30
-          - if: osx
-            then:
-              # loss decreases as expected, but accuracy appears to be mis-computed
-              - unset TARGET_EVAL_ACC_PCT
-          - python ./examples/beautiful_mnist.py
 
 about:
   homepage: https://github.com/tinygrad/tinygrad
@@ -206,8 +238,10 @@ about:
 
     Due to its extreme simplicity, it aims to be the easiest framework to add new accelerators to,
     with support for both inference and training. If XLA is CISC, tinygrad is RISC.
-  license: MIT
-  license_file: LICENSE
+  license: MIT AND BSD-3-Clause
+  license_file:
+    - LICENSE
+    - applegpu_LICENSE
   documentation: https://docs.tinygrad.org/
   repository: https://github.com/tinygrad/tinygrad
 
