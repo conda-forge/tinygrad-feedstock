@@ -1,7 +1,7 @@
 From 113ebaeb3ee45c6f93e809c869adb3837ab83313 Mon Sep 17 00:00:00 2001
 From: George Hotz <72895+geohot@users.noreply.github.com>
 Date: Tue, 7 Oct 2025 10:42:22 +0800
-Subject: [PATCH 2/3] move frontend dir to nn [pr] (#12470)
+Subject: [PATCH 2/4] move frontend dir to nn [pr] (#12470)
 
 ---
  examples/benchmark_onnx.py                    | 2 +-

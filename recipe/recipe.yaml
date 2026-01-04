@@ -17,6 +17,8 @@ source:
       - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
       # see more clearly what's happening in mnist test
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+      # ensure we find vendored applegpu
+      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
   - if: osx
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
@@ -31,7 +33,12 @@ outputs:
   - package:
       name: tinygrad
     build:
-      script: python -m pip install . -vv
+      script:
+        - python -m pip install . -vv
+        - if: osx
+          then:
+            - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
+            - cp -R ./tinygrad/extra/disassemblers/applegpu/* $SP_DIR/tinygrad/extra/disassemblers/applegpu
     requirements:
       build:
         - if: build_platform != host_platform
