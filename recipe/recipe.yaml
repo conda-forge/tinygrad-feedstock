@@ -19,7 +19,7 @@ source:
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
       - patches/0004-make-apple-disassembler-runnable-when-installed.patch
-  - if: osx
+  - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
         git: https://github.com/dougallj/applegpu
@@ -59,7 +59,7 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler("cxx") }}
             - ${{ compiler("cuda") }}
-        - if: osx
+        - if: osx and arm64
           then:
             - make
             # for bare clang/clang++ symlinks, see
@@ -114,7 +114,7 @@ outputs:
               # reduce number of steps in emulation
               - export STEPS=3
               - export TARGET_EVAL_ACC_PCT=30
-          - if: osx
+          - if: osx and x86_64
             then:
               # loss decreases as expected, but accuracy appears to be mis-computed
               - unset TARGET_EVAL_ACC_PCT
@@ -210,7 +210,7 @@ outputs:
               then:
                 # RuntimeError: Attribute list does not match Module context!
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
-            - if: osx
+            - if: osx and x86_64
               then:
                 # signed int32 overflow
                 - 'tests_to_skip += " or test_float_midcast_int32"'
