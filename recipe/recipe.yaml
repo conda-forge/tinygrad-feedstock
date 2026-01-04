@@ -124,6 +124,7 @@ outputs:
               - export STEPS=1
               - export DEBUG=2
               - unset CLANG
+              - export CUDA=1
               - env
               - unset TARGET_EVAL_ACC_PCT
             else:
