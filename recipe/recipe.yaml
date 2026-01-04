@@ -9,14 +9,19 @@ recipe:
   version: ${{ version }}
 
 source:
-  url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
-  patches:
-    - patches/0001-point-to-our-own-llvmdev.patch
-    # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
-    - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
-    # see more clearly what's happening in mnist test
-    - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+  - url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
+    sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
+    patches:
+      - patches/0001-point-to-our-own-llvmdev.patch
+      # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
+      - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
+      # see more clearly what's happening in mnist test
+      - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+  - if: osx
+    then:
+      - target_directory: tinygrad/extra/disassemblers/applegpu
+        git: https://github.com/dougallj/applegpu
+        rev: "797862eea0cee1f1eba74be3d0d02be4b3d2bd0d"
 
 build:
   number: ${{ build_number }}
@@ -212,8 +217,10 @@ about:
 
     Due to its extreme simplicity, it aims to be the easiest framework to add new accelerators to,
     with support for both inference and training. If XLA is CISC, tinygrad is RISC.
-  license: MIT
-  license_file: LICENSE
+  license: MIT AND BSD-3-Clause
+  license_file:
+    - LICENSE
+    - applegpu_LICENSE
   documentation: https://docs.tinygrad.org/
   repository: https://github.com/tinygrad/tinygrad
 
