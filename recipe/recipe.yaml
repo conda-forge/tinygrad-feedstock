@@ -39,6 +39,8 @@ outputs:
           then:
             - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
             - cp -R ./tinygrad/extra/disassemblers/applegpu/* $SP_DIR/tinygrad/extra/disassemblers/applegpu
+            - cd $SP_DIR/tinygrad/extra/disassemblers/applegpu/compiler_explorer_tools
+            - make
     requirements:
       build:
         - if: build_platform != host_platform
@@ -51,6 +53,13 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler("cxx") }}
             - ${{ compiler("cuda") }}
+        - if: osx
+          then:
+            - make
+            # for bare clang/clang++ symlinks, see
+            # https://github.com/dougallj/applegpu/blob/main/compiler_explorer_tools/Makefile
+            - clang
+            - clangxx
       host:
         - python
         - pip
@@ -69,12 +78,6 @@ outputs:
             - if: linux
               then:
                 - triton
-        - if: osx
-          then:
-            # DEBUG code builds applegpu submodule; see
-            # https://github.com/tinygrad/tinygrad/blob/v0.11.0/tinygrad/runtime/ops_metal.py#L147
-            # https://github.com/dougallj/applegpu/blob/797862eea0cee1f1/compiler_explorer.py#L22
-            - make
     tests:
       - python:
           imports:
