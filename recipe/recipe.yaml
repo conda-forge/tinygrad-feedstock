@@ -24,6 +24,8 @@ source:
       - target_directory: tinygrad/extra/disassemblers/applegpu
         git: https://github.com/dougallj/applegpu
         rev: "797862eea0cee1f1eba74be3d0d02be4b3d2bd0d"
+        patches:
+          - patches/0001-debug-bad-GPU-header.patch
 
 build:
   number: ${{ build_number }}

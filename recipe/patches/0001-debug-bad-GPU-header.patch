@@ -1,0 +1,114 @@
+From 6fff6e8cde448e27c4b6a627f6f268f716e23b91 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sun, 4 Jan 2026 20:00:51 +1100
+Subject: [PATCH] debug bad GPU header
+
+---
+ .../metal-archive-extractor.cpp               | 60 +++++++++++++++++--
+ 1 file changed, 55 insertions(+), 5 deletions(-)
+
+diff --git a/compiler_explorer_tools/metal-archive-extractor.cpp b/compiler_explorer_tools/metal-archive-extractor.cpp
+index ca10797..27ace89 100644
+--- a/compiler_explorer_tools/metal-archive-extractor.cpp
++++ b/compiler_explorer_tools/metal-archive-extractor.cpp
+@@ -32,10 +32,21 @@ static const char* getMachineTypeName(Buffer buffer) {
+ 		case GPUMachineType::AppleGPU: return "Apple GPU";
+ 		case GPUMachineType::AMDGPU:   return "AMD GPU";
+ 		case GPUMachineType::IntelGPU: return "Intel GPU";
++		case GPUMachineType::AIR64:    return "AIR64";
+ 		default: return "Unknown Target";
+ 	}
+ }
+ 
++static const char* cpuTypeName(uint32_t cpu) {
++	switch (static_cast<GPUMachineType>(cpu)) {
++		case GPUMachineType::AppleGPU: return "AppleGPU";
++		case GPUMachineType::AMDGPU:   return "AMDGPU";
++		case GPUMachineType::IntelGPU: return "IntelGPU";
++		case GPUMachineType::AIR64:    return "AIR64";
++		default: return "UNKNOWN";
++	}
++}
++
+ static bool isGPUType(uint32_t machineType) {
+ 	switch (static_cast<GPUMachineType>(machineType)) {
+ 		case GPUMachineType::AppleGPU:
+@@ -51,34 +62,73 @@ static uint32_t bswapIfNecessary(bool necessary, uint32_t value) {
+ 	return necessary ? OSSwapInt32(value) : value;
+ }
+ 
++static void logMachHeader(const char* prefix, mach_header_64* mh) {
++	fprintf(stderr,
++		"%s mach_header_64 @ %p\n"
++		"  magic   = 0x%08x\n"
++		"  cputype = 0x%08x (%u) [%s]\n",
++		prefix,
++		static_cast<void*>(mh),
++		mh->magic,
++		mh->cputype,
++		mh->cputype,
++		cpuTypeName(mh->cputype));
++}
++
+ static Buffer findGPU(Buffer buffer) {
+ 	fat_header* header = static_cast<fat_header*>(buffer.data);
+ 	mach_header_64* mach_header = static_cast<mach_header_64*>(buffer.data);
++	fprintf(stderr, "findGPU(): buffer=%p size=%zu\n", buffer.data, buffer.size);
+ 	if (!buffer.inBounds(header + 1) || !buffer.inBounds(mach_header + 1)) {
+-		fprintf(stderr, "File too small for fat header!\n");
++		fprintf(stderr, "File too small for fat header\n");
+ 		return {};
+ 	}
+-	bool swap;
++	fprintf(stderr, "Header magic = 0x%08x\n", header->magic);
++	bool swap = false;
+ 	if (header->magic == FAT_MAGIC_METAL) {
++		fprintf(stderr, "Detected FAT_MAGIC_METAL\n");
+ 		swap = false;
++
+ 	} else if (header->magic == FAT_CIGAM_METAL) {
++		fprintf(stderr, "Detected FAT_CIGAM_METAL\n");
+ 		swap = true;
++
+ 	} else if (header->magic == MH_MAGIC_64) {
+-		if (isGPUType(static_cast<mach_header_64*>(buffer.data)->cputype)) {
++		fprintf(stderr, "Detected MH_MAGIC_64\n");
++		logMachHeader("MH_MAGIC_64:", mach_header);
++
++		uint32_t cpu = mach_header->cputype;
++		fprintf(stderr,
++			"isGPUType(%u / 0x%08x) = %s\n",
++			cpu, cpu, isGPUType(cpu) ? "true" : "false");
++
++		if (isGPUType(cpu)) {
+ 			return buffer;
+ 		} else {
+ 			fprintf(stderr, "File isn't a GPU binary\n");
+ 			return {};
+ 		}
+ 	} else if (header->magic == MH_CIGAM_64) {
+-		if (isGPUType(OSSwapInt32(static_cast<mach_header_64*>(buffer.data)->cputype))) {
++		fprintf(stderr, "Detected MH_CIGAM_64\n");
++		logMachHeader("MH_CIGAM_64 (raw):", mach_header);
++
++		uint32_t swapped = OSSwapInt32(mach_header->cputype);
++		fprintf(stderr,
++			"  swapped cputype = 0x%08x (%u) [%s]\n",
++			swapped, swapped, cpuTypeName(swapped));
++
++		fprintf(stderr,
++			"isGPUType(swapped %u / 0x%08x) = %s\n",
++			swapped, swapped, isGPUType(swapped) ? "true" : "false");
++
++		if (isGPUType(swapped)) {
+ 			return buffer;
+ 		} else {
+ 			fprintf(stderr, "File isn't a GPU binary\n");
+ 			return {};
+ 		}
+ 	} else {
+-		fprintf(stderr, "Bad Header Magic %08x\n", header->magic);
++		fprintf(stderr, "Bad Header Magic 0x%08x\n", header->magic);
+ 		return {};
+ 	}
+ 	uint32_t narch = bswapIfNecessary(swap, header->nfat_arch);
