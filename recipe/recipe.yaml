@@ -78,6 +78,11 @@ outputs:
             - if: linux
               then:
                 - triton
+      run_constraints:
+        - if: win
+          then:
+            # avoid pulling in old MSVC activation
+            - vs2019_win-64 <0.0a0
     tests:
       - python:
           imports:
