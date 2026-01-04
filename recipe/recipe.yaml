@@ -172,7 +172,7 @@ outputs:
       # windows cannot run test suite yet due to lack of jax, minimal test on aarch due to emulation
       - files:
           source:
-            - examples/
+            - examples/beautiful_mnist.py
         script:
           # reduce number of steps; we just need to show that it's functional
           # however, accuracy should at least trend in the right direction
