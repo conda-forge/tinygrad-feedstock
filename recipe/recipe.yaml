@@ -19,7 +19,7 @@ source:
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
       - patches/0004-make-apple-disassembler-runnable-when-installed.patch
-  - if: osx
+  - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
         git: https://github.com/dougallj/applegpu
@@ -35,7 +35,7 @@ outputs:
     build:
       script:
         - python -m pip install . -vv
-        - if: false
+        - if: osx and arm64
           then:
             - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
             - cp -R ./tinygrad/extra/disassemblers/applegpu/* $SP_DIR/tinygrad/extra/disassemblers/applegpu
@@ -53,7 +53,7 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler("cxx") }}
             - ${{ compiler("cuda") }}
-        - if: osx
+        - if: osx and arm64
           then:
             - make
             # for bare clang/clang++ symlinks, see
