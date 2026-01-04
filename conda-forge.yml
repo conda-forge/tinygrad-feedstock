@@ -21,4 +21,5 @@ github_actions:
   - push
   - pull_request
 provider:
+  linux_64: github_actions
   osx_arm64: github_actions
