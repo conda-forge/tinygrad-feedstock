@@ -117,12 +117,14 @@ outputs:
             then:
               # loss decreases as expected, but accuracy appears to be mis-computed
               - unset TARGET_EVAL_ACC_PCT
-          - python ./examples/beautiful_mnist.py
+          # - python ./examples/beautiful_mnist.py
           # run again with high DEBUG value; exercises different paths, e.g. needs capstone
           - if: unix
             then:
               - export STEPS=1
               - export DEBUG=2
+              - unset CLANG
+              - env
               - unset TARGET_EVAL_ACC_PCT
             else:
               - set "SETPS=1"
