@@ -45,6 +45,7 @@ outputs:
         - setuptools
       run:
         - python
+        - capstone
         - llvmdev
         - clangxx_${{ target_platform }}
         # ensure `bin/clang` symlink is present
@@ -115,9 +116,6 @@ outputs:
             - blobfile
             - boto3
             - bottle
-            - if: x86_64
-              then:
-                - capstone
             # https://github.com/conda-forge/staged-recipes/issues/29179
             # - ggml-python
             - if: unix
