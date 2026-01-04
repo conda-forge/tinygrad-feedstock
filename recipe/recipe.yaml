@@ -29,10 +29,10 @@ outputs:
       script: python -m pip install . -vv
     requirements:
       build:
-        - if: build_platform != target_platform
+        - if: build_platform != host_platform
           then:
             - python
-            - cross-python_${{ target_platform }}
+            - cross-python_${{ host_platform }}
         # this is just here so smithy creates separate jobs for the CUDA variants
         - if: cuda_compiler_version != "None"
           then:
@@ -47,13 +47,13 @@ outputs:
         - python
         - capstone
         - llvmdev
-        - clangxx_${{ target_platform }}
+        - clangxx_${{ host_platform }}
         # ensure `bin/clang` symlink is present
         - clang
         - if: cuda_compiler_version != "None"
           then:
             - __cuda
-            - cuda-nvcc_${{ target_platform }}
+            - cuda-nvcc_${{ host_platform }}
             - if: linux
               then:
                 - triton
@@ -200,7 +200,7 @@ outputs:
                 - 'tests_to_skip += " or TestGC or test_gc"'
 
             # test suite in emulation on aarch is super slow, skip it there
-            - if: unix and build_platform == target_platform
+            - if: unix and build_platform == host_platform
               then:
                 - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
 
