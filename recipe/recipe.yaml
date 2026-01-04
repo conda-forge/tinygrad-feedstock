@@ -52,6 +52,7 @@ outputs:
         - clang
         - if: cuda_compiler_version != "None"
           then:
+            - __cuda
             - cuda-nvcc_${{ target_platform }}
             - if: linux
               then:
