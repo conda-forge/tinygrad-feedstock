@@ -28,6 +28,11 @@ source:
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  # DEBUG
+  skip:
+    - not (linux and x86_64)
+    - cuda_compiler_version == "None"
+    - match(python, "!=3.12")
 
 outputs:
   - package:
