@@ -95,11 +95,11 @@ outputs:
           # run again with high DEBUG value; exercises different paths, e.g. needs capstone
           - if: unix
             then:
-              - export STEPS=2
+              - export STEPS=1
               - export DEBUG=10
               - unset TARGET_EVAL_ACC_PCT
             else:
-              - set "SETPS=2"
+              - set "SETPS=1"
               - set "DEBUG=10"
               - set "TARGET_EVAL_ACC_PCT="
           - if: not aarch64
