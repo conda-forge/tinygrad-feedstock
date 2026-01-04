@@ -62,6 +62,12 @@ outputs:
             - if: linux
               then:
                 - triton
+        - if: osx
+          then:
+            # DEBUG code builds applegpu submodule; see
+            # https://github.com/tinygrad/tinygrad/blob/v0.11.0/tinygrad/runtime/ops_metal.py#L147
+            # https://github.com/dougallj/applegpu/blob/797862eea0cee1f1/compiler_explorer.py#L22
+            - make
     tests:
       - python:
           imports:
