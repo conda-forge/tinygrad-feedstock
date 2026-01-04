@@ -127,6 +127,7 @@ outputs:
               - export CC=$(xcrun --find clang)
               - export CXX=$(xcrun --find clang++)
               - unset TARGET_EVAL_ACC_PCT
+              - unset CLANG
               - env
             else:
               - set "SETPS=1"
