@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tinygrad-feedst
 
 Home: https://github.com/tinygrad/tinygrad
 
-Package license: MIT
+Package license: MIT AND BSD-3-Clause
 
 Summary: You like pytorch? You like micrograd? You love tinygrad! ❤️
 
