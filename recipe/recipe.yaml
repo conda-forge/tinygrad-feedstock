@@ -124,7 +124,10 @@ outputs:
             then:
               - export STEPS=1
               - export DEBUG=10
+              - export CC=$(xcrun --find clang)
+              - export CXX=$(xcrun --find clang++)
               - unset TARGET_EVAL_ACC_PCT
+              - env
             else:
               - set "SETPS=1"
               - set "DEBUG=10"
