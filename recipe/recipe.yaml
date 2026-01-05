@@ -120,7 +120,7 @@ outputs:
               - export DEBUG=10
               - unset TARGET_EVAL_ACC_PCT
             else:
-              - set "SETPS=1"
+              - set "STEPS=1"
               - set "DEBUG=10"
               - set "TARGET_EVAL_ACC_PCT="
           - if: not aarch64
