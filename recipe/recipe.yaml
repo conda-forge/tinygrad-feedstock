@@ -80,6 +80,7 @@ outputs:
           then:
             - __cuda
             - cuda-nvcc_${{ host_platform }}
+            - cuda-nvrtc-dev
             - if: linux
               then:
                 - triton
