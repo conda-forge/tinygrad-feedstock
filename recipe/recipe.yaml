@@ -43,6 +43,7 @@ outputs:
     build:
       script:
         - python -m pip install . -vv
+        - nvidia-smi
         - if: false
           then:
             - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
