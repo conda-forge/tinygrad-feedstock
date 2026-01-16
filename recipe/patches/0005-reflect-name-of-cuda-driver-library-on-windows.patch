@@ -1,21 +1,30 @@
-From e518da1ead275a44eebe58d13084c50b55f9cd53 Mon Sep 17 00:00:00 2001
+From b18c5de188745f5abda72549a934d90a6791d381 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 16 Jan 2026 14:00:48 +1100
 Subject: [PATCH 5/5] reflect name of cuda driver library on windows
 
 ---
- tinygrad/runtime/autogen/cuda.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tinygrad/runtime/autogen/cuda.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tinygrad/runtime/autogen/cuda.py b/tinygrad/runtime/autogen/cuda.py
-index 55c101aec..27ec9d27c 100644
+index 55c101aec..f3e7af689 100644
 --- a/tinygrad/runtime/autogen/cuda.py
 +++ b/tinygrad/runtime/autogen/cuda.py
-@@ -145,7 +145,7 @@ def char_pointer_cast(string, encoding='utf-8'):
+@@ -7,6 +7,7 @@
+ # LONGDOUBLE_SIZE is: 16
+ #
+ import ctypes, ctypes.util
++import os
+ 
+ 
+ class AsDictMixin:
+@@ -145,7 +146,8 @@ def char_pointer_cast(string, encoding='utf-8'):
  
  
  _libraries = {}
 -_libraries['libcuda.so'] = ctypes.CDLL(ctypes.util.find_library('cuda'))
++os.add_dll_directory(os.path.expandvars(r"%SystemRoot%\System32"))
 +_libraries['libcuda.so'] = ctypes.CDLL("nvcuda.dll")
  
  
