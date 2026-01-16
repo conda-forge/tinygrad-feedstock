@@ -1,0 +1,22 @@
+From 8e3a92067a8c29a570d926ff9d2732222c46205c Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Fri, 16 Jan 2026 14:00:48 +1100
+Subject: [PATCH 5/5] reflect name of cuda driver library on windows
+
+---
+ tinygrad/runtime/autogen/cuda.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tinygrad/runtime/autogen/cuda.py b/tinygrad/runtime/autogen/cuda.py
+index 55c101aec..2fb132d29 100644
+--- a/tinygrad/runtime/autogen/cuda.py
++++ b/tinygrad/runtime/autogen/cuda.py
+@@ -145,7 +145,7 @@ def char_pointer_cast(string, encoding='utf-8'):
+ 
+ 
+ _libraries = {}
+-_libraries['libcuda.so'] = ctypes.CDLL(ctypes.util.find_library('cuda'))
++_libraries['libcuda.so'] = ctypes.CDLL(ctypes.util.find_library('nvcuda'))
+ 
+ 
+ cuuint32_t = ctypes.c_uint32

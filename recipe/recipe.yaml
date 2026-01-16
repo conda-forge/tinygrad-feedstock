@@ -19,6 +19,9 @@ source:
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
       - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+      - if: win
+        then:
+          - patches/0005-reflect-name-of-cuda-driver-library-on-windows.patch
   - if: osx
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
