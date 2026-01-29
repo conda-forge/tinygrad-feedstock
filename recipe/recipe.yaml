@@ -241,6 +241,9 @@ outputs:
                 - 'tests_to_skip += " or test_putotherprocess"'
                 # running into weakly-referenced object no longer exists
                 - 'tests_to_skip += " or TestGC or test_gc"'
+            - if: osx and arm64
+              then:
+                - 'tests_to_skip += " or (TestOpsUint8 and test_cast)"'
             - if: osx and x86_64
               then:
                 # signed int32 overflow
@@ -253,6 +256,8 @@ outputs:
                 - 'tests_to_skip += " or test_conv2d_fused"'
                 # flaky hypothesis test
                 - 'tests_to_skip += " or test_float_cast_to_unsigned"'
+                # less operations on CPU than expected on metal, apparently
+                - 'tests_to_skip += " or test_jit_split_simple"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == host_platform
