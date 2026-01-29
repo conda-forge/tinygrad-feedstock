@@ -236,10 +236,12 @@ outputs:
               then:
                 # RuntimeError: Attribute list does not match Module context!
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
+            - if: osx or (linux and cuda_compiler_version != "None")
+              then:
+                # beam-related stuff seems to hang on metal, OOM/crash with CUDA
+                - 'tests_to_skip += " or TestBEAM or test_beam"'
             - if: osx
               then:
-                # beam-related stuff seems to hang
-                - 'tests_to_skip += " or TestBEAM or test_beam"'
                 # another apparent hang
                 - 'tests_to_skip += " or test_getotherprocess"'
                 # forking too early
