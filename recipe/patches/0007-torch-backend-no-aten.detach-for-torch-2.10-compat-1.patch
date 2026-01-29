@@ -1,7 +1,7 @@
 From 06e735422053c67e0b14366397625994e7829765 Mon Sep 17 00:00:00 2001
 From: Roelof van Dijk <3604013+roelofvandijk@users.noreply.github.com>
 Date: Thu, 20 Nov 2025 18:12:15 +0100
-Subject: [PATCH 7/7] torch backend: no aten.detach for torch 2.10 compat
+Subject: [PATCH 7/8] torch backend: no aten.detach for torch 2.10 compat
  (#13381)
 
 * this works, less cpp?

@@ -1,7 +1,7 @@
 From e224cde763243217cf9e486d3c8d783e2210a28e Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 16 Jan 2026 14:09:36 +1100
-Subject: [PATCH 5/7] default to CPU as device on osx-64, remove metal
+Subject: [PATCH 5/8] default to CPU as device on osx-64, remove metal
 
 Metal is only supported for M1+ devices, see
 https://github.com/tinygrad/tinygrad/blob/v0.11.0/docs/runtime.md?plain=1#L10
