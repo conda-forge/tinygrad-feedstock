@@ -45,6 +45,7 @@ build:
   skip:
     # DEBUG
     - match(python, "!=3.13")
+    - aarch64
     # CUDA builds on GPU agents, non-CUDA builds on CPU agents; skip could be avoided
     # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
     - cuda_compiler_version == "None" and "gpu" in github_actions_labels
