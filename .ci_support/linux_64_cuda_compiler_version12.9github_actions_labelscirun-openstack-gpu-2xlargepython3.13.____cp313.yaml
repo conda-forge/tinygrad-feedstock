@@ -17,7 +17,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma9
 github_actions_labels:
-- cirun-openstack-gpu-large
+- cirun-openstack-gpu-2xlarge
 pin_run_as_build:
   python:
     min_pin: x.x
