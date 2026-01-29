@@ -6,5 +6,5 @@ MACOSX_SDK_VERSION: # [osx]
 
 github_actions_labels:          # [unix]
   - cirun-openstack-cpu-large   # [linux]
-  - cirun-openstack-gpu-large   # [linux]
+  - cirun-openstack-gpu-2xlarge # [linux]
   - cirun-macos-m4-large        # [osx]
