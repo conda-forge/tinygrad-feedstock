@@ -1,7 +1,7 @@
 From c0ca50248784c75f127d425c86cd7e8454b8ca5b Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 29 Jan 2026 13:32:42 +1100
-Subject: [PATCH 6/6] skip metal disassembly for vanilla clang
+Subject: [PATCH 6/7] skip metal disassembly for vanilla clang
 
 ---
  tinygrad/runtime/ops_metal.py | 11 +++++++++++
