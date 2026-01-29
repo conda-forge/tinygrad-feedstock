@@ -28,6 +28,8 @@ source:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
           - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
+      # backport https://github.com/tinygrad/tinygrad/pull/13381
+      - patches/0007-torch-backend-no-aten.detach-for-torch-2.10-compat-1.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
