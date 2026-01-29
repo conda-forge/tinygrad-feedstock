@@ -36,6 +36,7 @@ build:
     - not ((linux or win) and x86_64)
     - cuda_compiler_version == "None"
     - match(python, "!=3.12")
+    - win
 
 outputs:
   - package:
@@ -43,11 +44,6 @@ outputs:
     build:
       script:
         - python -m pip install . -vv
-        - if: linux
-          then:
-            - nvidia-smi
-          else:
-            - where nvcuda.dll
         - if: false
           then:
             - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
