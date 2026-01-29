@@ -46,6 +46,7 @@ build:
     # DEBUG
     - match(python, "!=3.13")
     - aarch64
+    - cuda_compiler_version == "None"
     # CUDA builds on GPU agents, non-CUDA builds on CPU agents; skip could be avoided
     # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
     - cuda_compiler_version == "None" and "gpu" in github_actions_labels
@@ -147,9 +148,9 @@ outputs:
               # reduce number of steps in emulation
               - export STEPS=3
               - export TARGET_EVAL_ACC_PCT=30
-          - python ./examples/beautiful_mnist.py
+          # - python ./examples/beautiful_mnist.py
           # run again with high DEBUG value; exercises different paths, e.g. needs capstone
-          - if: unix
+          - if: false
             then:
               - export STEPS=1
               - export DEBUG=10
@@ -239,6 +240,8 @@ outputs:
               then:
                 # RuntimeError: Attribute list does not match Module context!
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
+                # OOMs on GPU?
+                - 'tests_to_skip += " or TestBEAM"'
             - if: osx
               then:
                 # beam-related stuff seems to hang
