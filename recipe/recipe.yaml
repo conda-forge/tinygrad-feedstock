@@ -19,6 +19,10 @@ source:
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
       - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+      - if: osx and x86_64
+        then:
+          # disable metal on osx
+          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
