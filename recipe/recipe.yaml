@@ -42,6 +42,11 @@ source:
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  skip:
+    # CUDA builds on GPU agents, non-CUDA builds on CPU agents; skip could be avoided
+    # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
+    - cuda_compiler_version == "None" and "gpu" in github_actions_labels
+    - cuda_compiler_version != "None" and "cpu" in github_actions_labels
 
 outputs:
   - package:
