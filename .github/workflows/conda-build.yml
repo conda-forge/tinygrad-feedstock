@@ -21,30 +21,28 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_cuda_compiler_version12.9python3.13.____cp313
+          - CONFIG: linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-largepython3.13.____cp313
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_64_cuda_compiler_version12.9python_hd2594ab6', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_64_cuda_compiler_version12.9github_hd45dbf7f', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_cuda_compiler_versionNonepython3.13.____cp313
+          - CONFIG: linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_64_cuda_compiler_versionNonepython_h46731b07', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_64_cuda_compiler_versionNonegithub_h942c4016', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_cuda_compiler_version12.9python3.13.____cp313
+          - CONFIG: linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-largepython3.13.____cp313
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_version12.9p_h09be3c5c', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_version12.9g_hb098be71', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_cuda_compiler_versionNonepython3.13.____cp313
+          - CONFIG: linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['cirun-openstack-gpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_versionNonep_h35b9d921', 'linux', 'x64', 'self-hosted']
+            runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_versionNoneg_hf72cd245', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: osx_arm64_python3.13.____cp313
             UPLOAD_PACKAGES: True
             os: macos
