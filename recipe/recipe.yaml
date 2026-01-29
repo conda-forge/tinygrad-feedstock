@@ -37,6 +37,9 @@ source:
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  skip:
+    # DEBUG
+    - match(python, "!=3.13")
 
 outputs:
   - package:
