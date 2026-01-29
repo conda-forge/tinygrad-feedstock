@@ -23,6 +23,11 @@ source:
         then:
           # disable metal on osx
           - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+      - if: osx and arm64
+        then:
+          # cannot disassemble metal when using vanilla clang; see
+          # https://github.com/tinygrad/tinygrad/issues/14005
+          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
