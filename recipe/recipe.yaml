@@ -1,6 +1,6 @@
 context:
   version: "0.11.0"
-  build_number: 1
+  build_number: 2
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
 
