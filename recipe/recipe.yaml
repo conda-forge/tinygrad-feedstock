@@ -159,7 +159,8 @@ outputs:
               - set "TARGET_EVAL_ACC_PCT="
           - if: not aarch64
             then:
-              - python ./examples/beautiful_mnist.py
+              # suppress enormously noisy output; re-enable if things actually fail
+              - python ./examples/beautiful_mnist.py > /dev/null
 
   - package:
       name: tinygrad-tests
