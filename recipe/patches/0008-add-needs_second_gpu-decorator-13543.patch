@@ -1,7 +1,7 @@
 From 976325173236e5d9b15b02a1593c2e3dbaa35a4c Mon Sep 17 00:00:00 2001
 From: George Hotz <72895+geohot@users.noreply.github.com>
 Date: Tue, 2 Dec 2025 19:08:23 -0800
-Subject: [PATCH 8/8] add needs_second_gpu decorator (#13543)
+Subject: [PATCH 8/9] add needs_second_gpu decorator (#13543)
 
 * add needs_second_gpu decorator
 
