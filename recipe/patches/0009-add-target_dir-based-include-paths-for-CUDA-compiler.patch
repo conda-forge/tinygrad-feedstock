@@ -1,0 +1,45 @@
+From befc1e5a51579c70bddce568cb528b13c736c5e9 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sat, 31 Jan 2026 14:18:22 +1100
+Subject: [PATCH 9/9] add target_dir-based include paths for CUDA compilers
+
+---
+ tinygrad/runtime/support/compiler_cuda.py | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/tinygrad/runtime/support/compiler_cuda.py b/tinygrad/runtime/support/compiler_cuda.py
+index 1b27d0265..922a21e5f 100644
+--- a/tinygrad/runtime/support/compiler_cuda.py
++++ b/tinygrad/runtime/support/compiler_cuda.py
+@@ -6,6 +6,22 @@ from tinygrad.device import Compiler, CompileError
+ 
+ PTX, CUDA_PATH = getenv("PTX"), getenv("CUDA_PATH", "")  # PTX shouldn't be here, in fact, it shouldn't exist
+ 
++import sys, platform
++WIN = sys.platform == "win32"
++CONDA_PREFIX = getenv("CONDA_PREFIX", "")
++# turn into full path; windows has a different layout
++CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CONDA_PREFIX)
++
++match (sys.platform, platform.machine().lower()):
++    case ("linux", "x86_64"):
++        target_dir = "targets/x86_64-linux"
++    case ("linux", m) if m in ("aarch64", "arm64"):
++        target_dir = "targets/sbsa-linux"
++    case (s, _) if s in ("darwin", "win"):
++        target_dir = ""
++    case (s, m):
++        raise ValueError(f"unknown platform: sys.platform={s}, platform.machine()={m}")
++
+ def _get_bytes(arg, get_str, get_sz, check) -> bytes:
+   sz = init_c_var(ctypes.c_size_t(), lambda x: check(get_sz(arg, ctypes.byref(x))))
+   return ctypes.string_at(init_c_var(ctypes.create_string_buffer(sz.value), lambda x: check(get_str(arg, x))), size=sz.value)
+@@ -41,7 +57,7 @@ def cuda_disassemble(lib:bytes, arch:str):
+ class CUDACompiler(Compiler):
+   def __init__(self, arch:str, cache_key:str="cuda"):
+     self.arch, self.compile_options = arch, [f'--gpu-architecture={arch}']
+-    self.compile_options += [f"-I{CUDA_PATH}/include"] if CUDA_PATH else ["-I/usr/local/cuda/include", "-I/usr/include", "-I/opt/cuda/include"]
++    self.compile_options += [f"-I{CONDA_PREFIX}/include"] + (not WIN) * [f"-I{CONDA_PREFIX}/{target_dir}/include"]
+     nvrtc_check(nvrtc.nvrtcVersion((nvrtcMajor := ctypes.c_int()), (nvrtcMinor := ctypes.c_int())))
+     if (nvrtcMajor.value, nvrtcMinor.value) >= (12, 4): self.compile_options.append("--minimal")
+     super().__init__(f"compile_{cache_key}_{self.arch}")

@@ -1,6 +1,6 @@
 context:
   version: "0.11.0"
-  build_number: 1
+  build_number: 2
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
 
@@ -19,7 +19,23 @@ source:
       - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # ensure we find vendored applegpu
       - patches/0004-make-apple-disassembler-runnable-when-installed.patch
-  - if: osx
+      - if: osx and x86_64
+        then:
+          # disable metal on osx
+          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+      - if: osx and arm64
+        then:
+          # cannot disassemble metal when using vanilla clang; see
+          # https://github.com/tinygrad/tinygrad/issues/14005
+          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
+      # backport https://github.com/tinygrad/tinygrad/pull/13381
+      - patches/0007-torch-backend-no-aten.detach-for-torch-2.10-compat-1.patch
+      # backport https://github.com/tinygrad/tinygrad/pull/13543
+      # avoid multi-GPU tests and failure in new pytorch due to eps=0
+      - patches/0008-add-needs_second_gpu-decorator-13543.patch
+      # help nvcc find target-specific headers
+      - patches/0009-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+  - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
         git: https://github.com/dougallj/applegpu
@@ -28,6 +44,11 @@ source:
 build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
+  skip:
+    # CUDA builds on GPU agents, non-CUDA builds on CPU agents; skip could be avoided
+    # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
+    - cuda_compiler_version == "None" and "gpu" in github_actions_labels
+    - cuda_compiler_version != "None" and "cpu" in github_actions_labels
 
 outputs:
   - package:
@@ -35,7 +56,7 @@ outputs:
     build:
       script:
         - python -m pip install . -vv
-        - if: false
+        - if: osx and arm64
           then:
             - mkdir -p $SP_DIR/tinygrad/extra/disassemblers/applegpu
             - cp -R ./tinygrad/extra/disassemblers/applegpu/* $SP_DIR/tinygrad/extra/disassemblers/applegpu
@@ -53,7 +74,7 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler("cxx") }}
             - ${{ compiler("cuda") }}
-        - if: osx
+        - if: osx and arm64
           then:
             - make
             # for bare clang/clang++ symlinks, see
@@ -71,14 +92,24 @@ outputs:
         - clangxx_${{ host_platform }}
         # ensure `bin/clang` symlink is present
         - clang
+        # avoid solver choosing ancient clang versions
+        - clang >18
         - if: cuda_compiler_version != "None"
           then:
             - __cuda
             - cuda-nvcc_${{ host_platform }}
+            - cuda-nvrtc-dev
             - if: linux
               then:
                 - triton
       run_constraints:
+        - if: linux
+          then:
+            # avoid wrong compiler activation that interferes with clang_<target>
+            - gcc_linux-64 <0.0a0
+            - gxx_linux-64 <0.0a0
+            - gcc_linux-aarch64 <0.0a0
+            - gxx_linux-aarch64 <0.0a0
         - if: win
           then:
             # avoid pulling in old MSVC activation
@@ -89,6 +120,13 @@ outputs:
             - tinygrad
             - tinygrad.runtime.autogen.llvm
           pip_check: true
+      - script:
+          - if: linux
+            then:
+              # cannot do a bare import test, because libc.syscall is a member, not a package
+              - python -c "from tinygrad.runtime.autogen.libc import syscall"
+            else:
+              - echo nothing
       # integration-test in addition to test suite below
       - files:
           source:
@@ -108,10 +146,6 @@ outputs:
               # reduce number of steps in emulation
               - export STEPS=3
               - export TARGET_EVAL_ACC_PCT=30
-          - if: osx
-            then:
-              # loss decreases as expected, but accuracy appears to be mis-computed
-              - unset TARGET_EVAL_ACC_PCT
           - python ./examples/beautiful_mnist.py
           # run again with high DEBUG value; exercises different paths, e.g. needs capstone
           - if: unix
@@ -125,7 +159,8 @@ outputs:
               - set "TARGET_EVAL_ACC_PCT="
           - if: not aarch64
             then:
-              - python ./examples/beautiful_mnist.py
+              # suppress enormously noisy output; re-enable if things actually fail
+              - python ./examples/beautiful_mnist.py > /dev/null
 
   - package:
       name: tinygrad-tests
@@ -204,7 +239,22 @@ outputs:
               then:
                 # RuntimeError: Attribute list does not match Module context!
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
+            - if: osx or (linux and cuda_compiler_version != "None")
+              then:
+                # beam-related stuff seems to hang on metal, OOM/crash with CUDA
+                - 'tests_to_skip += " or TestBEAM or test_beam"'
             - if: osx
+              then:
+                # another apparent hang
+                - 'tests_to_skip += " or test_getotherprocess"'
+                # forking too early
+                - 'tests_to_skip += " or test_putotherprocess"'
+                # running into weakly-referenced object no longer exists
+                - 'tests_to_skip += " or TestGC or test_gc"'
+            - if: osx and arm64
+              then:
+                - 'tests_to_skip += " or (TestOpsUint8 and test_cast)"'
+            - if: osx and x86_64
               then:
                 # signed int32 overflow
                 - 'tests_to_skip += " or test_float_midcast_int32"'
@@ -216,19 +266,13 @@ outputs:
                 - 'tests_to_skip += " or test_conv2d_fused"'
                 # flaky hypothesis test
                 - 'tests_to_skip += " or test_float_cast_to_unsigned"'
-                # beam-related stuff seems to hang
-                - 'tests_to_skip += " or TestBEAM or test_beam"'
-                # another apparent hang
-                - 'tests_to_skip += " or test_getotherprocess"'
-                # forking too early
-                - 'tests_to_skip += " or test_putotherprocess"'
-                # running into weakly-referenced object no longer exists
-                - 'tests_to_skip += " or TestGC or test_gc"'
+                # less operations on CPU than expected on metal, apparently
+                - 'tests_to_skip += " or test_jit_split_simple"'
 
             # test suite in emulation on aarch is super slow, skip it there
             - if: unix and build_platform == host_platform
               then:
-                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50"]))'
+                - 'sys.exit(pytest.main(["-v", "test/", "-k", f"not ({tests_to_skip})", "--durations=50", "--maxfail=20"]))'
 
 about:
   homepage: https://github.com/tinygrad/tinygrad

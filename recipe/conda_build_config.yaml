@@ -3,3 +3,8 @@ c_stdlib_version:   # [osx]
   - 15.5            # [osx]
 MACOSX_SDK_VERSION: # [osx]
   - 15.5            # [osx]
+
+github_actions_labels:          # [unix]
+  - cirun-openstack-cpu-large   # [linux]
+  - cirun-openstack-gpu-2xlarge # [linux]
+  - cirun-macos-m4-large        # [osx]

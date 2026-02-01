@@ -1,0 +1,33 @@
+From 06e735422053c67e0b14366397625994e7829765 Mon Sep 17 00:00:00 2001
+From: Roelof van Dijk <3604013+roelofvandijk@users.noreply.github.com>
+Date: Thu, 20 Nov 2025 18:12:15 +0100
+Subject: [PATCH 7/9] torch backend: no aten.detach for torch 2.10 compat
+ (#13381)
+
+* this works, less cpp?
+
+* simpler = better
+
+* keep torch 2.9 working as well
+---
+ extra/torch_backend/backend.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/extra/torch_backend/backend.py b/extra/torch_backend/backend.py
+index 18ea43938..21e363d6e 100644
+--- a/extra/torch_backend/backend.py
++++ b/extra/torch_backend/backend.py
+@@ -58,10 +58,12 @@ view_ops = {
+   "aten.transpose.int": Tensor.transpose,
+   "aten.squeeze.dim": Tensor.squeeze,
+   "aten.unsqueeze": Tensor.unsqueeze,
+-  "aten.detach": Tensor.detach,
+   "aten.select.int": lambda self, dim, idx: self[(slice(None),) * (dim%self.ndim) + (idx,)],
+ }
+ 
++# torch 2.10 handles this natively
++if tuple(map(int, torch.__version__.split('.')[:2])) < (2, 10): view_ops.update({"aten.detach": Tensor.detach})
++
+ for k,v in view_ops.items(): torch.library.impl(k.replace("aten.", "aten::"), "privateuseone")(wrap_view_op(v))
+ 
+ # in place operations with views
