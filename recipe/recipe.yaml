@@ -1,6 +1,6 @@
 context:
-  version: "0.11.0"
-  build_number: 2
+  version: "0.12.0"
+  build_number: 0
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
 
@@ -10,31 +10,30 @@ recipe:
 
 source:
   - url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
-    sha256: e5e7b0f2319a8cc8e5de14dbc6ee91a403efd2414681b874b526a8b39d7fa86f
+    sha256: 5bddedec6fcf4e963a957c270532599ccab798f41dfb335f00abe9c4b291cf9c
     patches:
       - patches/0001-point-to-our-own-llvmdev.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/12470 to make tests runnable out-of-tree
-      - patches/0002-move-frontend-dir-to-nn-pr-12470.patch
       # see more clearly what's happening in mnist test
-      - patches/0003-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+      - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
+      # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
+      - patches/0003-use-our-standard-macos-sdk.patch
+      # search CONDA_PREFIX first
+      - patches/0004-look-for-libraries-in-PREFIX-first.patch
       # ensure we find vendored applegpu
-      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
+      - patches/0005-make-apple-disassembler-runnable-when-installed.patch
       - if: osx and x86_64
         then:
           # disable metal on osx
-          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+          - patches/0006-default-to-CPU-as-device-on-osx-64-remove-metal.patch
       - if: osx and arm64
         then:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
-          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/13381
-      - patches/0007-torch-backend-no-aten.detach-for-torch-2.10-compat-1.patch
-      # backport https://github.com/tinygrad/tinygrad/pull/13543
-      # avoid multi-GPU tests and failure in new pytorch due to eps=0
-      - patches/0008-add-needs_second_gpu-decorator-13543.patch
+          - patches/0007-skip-metal-disassembly-for-vanilla-clang.patch
       # help nvcc find target-specific headers
-      - patches/0009-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+      - patches/0008-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+      # revert https://github.com/tinygrad/tinygrad/pull/14086 (until we have ggml)
+      - patches/0009-Revert-don-t-skip-gguf-test-if-ggml-is-not-installed.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
@@ -49,6 +48,7 @@ build:
     # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
     - cuda_compiler_version == "None" and "gpu" in github_actions_labels
     - cuda_compiler_version != "None" and "cpu" in github_actions_labels
+    - match(python, "<3.11")
 
 outputs:
   - package:
@@ -90,8 +90,8 @@ outputs:
         - capstone
         - llvmdev
         - clangxx_${{ host_platform }}
-        # ensure `bin/clang` symlink is present
-        - clang
+        # tinygrad wants headers from `include/clang-c`; also ensure `bin/clang` symlink is present
+        - clangdev
         # avoid solver choosing ancient clang versions
         - clang >18
         - if: cuda_compiler_version != "None"
@@ -203,6 +203,7 @@ outputs:
             - onnx2torch
             - onnx
             - onnxruntime
+            - openai
             - pandas
             - py-opencv
             - pybind11
@@ -235,6 +236,10 @@ outputs:
                 - 'tests_to_skip += " or test_backward_sum_acc_dtype"'
                 # cannot load onnx model from some temporary location
                 - 'tests_to_skip += " or (TestQuantizeOnnxCPU and test_quant_128)"'
+                # No such file or directory: '/tmp/tmpqhndyk1l.so'
+                - 'tests_to_skip += " or test_bitfield_interop or test_packed_struct_interop"'
+                # mismatch in expected number of relocations
+                - 'tests_to_skip += " or test_load_clang_jit_strtab"'
             - if: linux and cuda_compiler_version != "None"
               then:
                 # RuntimeError: Attribute list does not match Module context!
