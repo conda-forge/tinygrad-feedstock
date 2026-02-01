@@ -21,12 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_cuda_compiler_version12.9github_h87e57ab3', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
@@ -45,11 +39,6 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_64_cuda_compiler_version12.9github_h0d460f21', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_64_cuda_compiler_versionNonegithub_h826ec112', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
@@ -65,12 +54,6 @@ jobs:
             os: ubuntu
             runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_64_cuda_compiler_versionNonegithub_h942c4016', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_cuda_compiler_version12.9g_h87a141a1', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-            CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
           - CONFIG: linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
@@ -89,11 +72,6 @@ jobs:
             runs_on: ['cirun-openstack-gpu-2xlarge--${{ github.run_id }}-linux_aarch64_cuda_compiler_version12.9g_h9da23deb', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
             CONDA_FORGE_DOCKER_RUN_ARGS: "--gpus all"
-          - CONFIG: linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: ubuntu
-            runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_versionNoneg_h68ea29ee', 'linux', 'x64', 'self-hosted']
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
@@ -109,10 +87,6 @@ jobs:
             os: ubuntu
             runs_on: ['cirun-openstack-cpu-large--${{ github.run_id }}-linux_aarch64_cuda_compiler_versionNoneg_hf72cd245', 'linux', 'x64', 'self-hosted']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-          - CONFIG: osx_arm64_python3.10.____cpython
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['cirun-macos-m4-large--${{ github.run_id }}-osx_arm64_python3.10.____cpython', 'macOS', 'arm64', 'self-hosted']
           - CONFIG: osx_arm64_python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: macos
