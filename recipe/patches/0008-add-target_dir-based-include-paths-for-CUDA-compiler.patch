@@ -1,7 +1,7 @@
 From a5f02b1df6d6ac05847c7d0af36456c94030b5a9 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sat, 31 Jan 2026 14:18:22 +1100
-Subject: [PATCH 8/9] add target_dir-based include paths for CUDA compilers
+Subject: [PATCH 08/10] add target_dir-based include paths for CUDA compilers
 
 ---
  tinygrad/runtime/support/compiler_cuda.py | 18 +++++++++++++++++-

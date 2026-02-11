@@ -1,7 +1,7 @@
 From 73511a180ece5bbcdd9aba91a0bc29508f01b59d Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sun, 1 Feb 2026 19:50:29 +1100
-Subject: [PATCH 9/9] Revert "don't skip gguf test if ggml is not installed
+Subject: [PATCH 09/10] Revert "don't skip gguf test if ggml is not installed
  (#14086)"
 
 This reverts commit ed295e74dc43055bcf1f32d0de301d9b228dadfa.
