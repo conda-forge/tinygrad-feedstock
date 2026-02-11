@@ -54,6 +54,11 @@ outputs:
   - package:
       name: tinygrad
     build:
+      # redundant but: https://github.com/prefix-dev/rattler-build/issues/2110
+      skip:
+        - match(python, "<3.11")
+        - cuda_compiler_version == "None" and "gpu" in github_actions_labels
+        - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       script:
         - python -m pip install . -vv
         - if: osx and arm64
@@ -170,6 +175,10 @@ outputs:
         - match(cuda_compiler_version, ">=13.0")
         # missing onnxruntime
         - match(python, ">=3.14")
+        # redundant but: https://github.com/prefix-dev/rattler-build/issues/2110
+        - match(python, "<3.11")
+        - cuda_compiler_version == "None" and "gpu" in github_actions_labels
+        - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       # splitting off what conda packages under etc/conda/test-files when using test.files.source
       script:
         - if: unix
