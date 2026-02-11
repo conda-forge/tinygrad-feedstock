@@ -1,0 +1,22 @@
+From 26a89b0a37caf6d01d058c534f7be9e2c16cfeb3 Mon Sep 17 00:00:00 2001
+From: George Hotz <72895+geohot@users.noreply.github.com>
+Date: Wed, 11 Feb 2026 09:30:13 +0800
+Subject: [PATCH 9/9] skip test for models that are not available anymore
+
+very partial backport of https://github.com/tinygrad/tinygrad/commit/2d4ad9e739e75d883bac6a86e2f02a35c89a9261
+---
+ test/models/test_efficientnet.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test/models/test_efficientnet.py b/test/models/test_efficientnet.py
+index 62ad994f4..5c47a9c05 100644
+--- a/test/models/test_efficientnet.py
++++ b/test/models/test_efficientnet.py
+@@ -72,6 +72,7 @@ class TestEfficientNet(unittest.TestCase):
+     self.assertEqual(_LABELS[labels[0]], "hen")
+     self.assertEqual(_LABELS[labels[1]], "sports car, sport car")
+ 
++@unittest.skip("these pretrained models are no longer available")
+ class TestViT(unittest.TestCase):
+   @classmethod
+   def setUpClass(cls):

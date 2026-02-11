@@ -1,0 +1,114 @@
+From 9e8960eebecbcf767f54c1e5a12bcadf26087829 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Mon, 27 Oct 2025 15:37:17 +0100
+Subject: [PATCH 1/9] look for libraries in PREFIX first
+
+---
+ tinygrad/runtime/autogen/__init__.py | 21 +++++++++++++--------
+ tinygrad/runtime/autogen/libclang.py |  3 ++-
+ tinygrad/runtime/autogen/llvm.py     |  2 +-
+ tinygrad/runtime/support/c.py        |  7 ++++++-
+ 4 files changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
+index 5617e73f6..3af6408d4 100644
+--- a/tinygrad/runtime/autogen/__init__.py
++++ b/tinygrad/runtime/autogen/__init__.py
+@@ -1,5 +1,9 @@
+ import glob, importlib, pathlib, subprocess, tarfile
+-from tinygrad.helpers import fetch, flatten, system, getenv
++from tinygrad.helpers import fetch, flatten, system, getenv, OSX, WIN
++
++CONDA_PREFIX = getenv("CONDA_PREFIX", "")
++# if present, turn into full path; windows has a different layout
++CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CONDA_PREFIX)
+ 
+ root = (here:=pathlib.Path(__file__).parent).parents[2]
+ nv_src = {"nv_570": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/81fe4fb417c8ac3b9bdcc1d56827d116743892a5.tar.gz",
+@@ -8,8 +12,8 @@ ffmpeg_src = "https://ffmpeg.org/releases/ffmpeg-8.0.1.tar.gz"
+ rocr_src = "https://github.com/ROCm/rocm-systems/archive/refs/tags/rocm-7.1.1.tar.gz"
+ macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+ 
+-llvm_lib = (r"'C:\\Program Files\\LLVM\\bin\\LLVM-C.dll' if WIN else '/opt/homebrew/opt/llvm@20/lib/libLLVM.dylib' if OSX else " +
+-            repr(['LLVM'] + [f'LLVM-{i}' for i in reversed(range(14, 21+1))]))
++llvm_lib = CONDA_PREFIX/(r"bin\LLVM-C.dll" if WIN else f"lib/libLLVM.{'dylib' if OSX else 'so'}")
++clang_lib = CONDA_PREFIX/(r"bin\libclang-13.dll" if WIN else f"lib/libclang.{'dylib' if OSX else 'so'}")
+ 
+ webgpu_lib = "os.path.join(sysconfig.get_paths()['purelib'], 'pydawn', 'lib', 'libwebgpu_dawn.dll') if WIN else 'webgpu_dawn'"
+ nv_lib_path = "f'/usr/local/cuda/targets/{sysconfig.get_config_vars().get(\"MULTIARCH\", \"\").rsplit(\"-\", 1)[0]}/lib'"
+@@ -79,8 +83,9 @@ def __getattr__(nm):
+                                  rules=[('__NR', 'NR')])
+     case "ib": return load("ib", "'ibverbs'", ["/usr/include/infiniband/verbs.h", "/usr/include/infiniband/verbs_api.h",
+                                                "/usr/include/infiniband/ib_user_ioctl_verbs.h","/usr/include/rdma/ib_user_verbs.h"], errno=True)
+-    case "llvm": return load("llvm", llvm_lib, lambda: [system("llvm-config-20 --includedir")+"/llvm-c/**/*.h"],
+-                             args=lambda: system("llvm-config-20 --cflags").split(), recsym=True, prolog=["from tinygrad.helpers import WIN, OSX"])
++    case "llvm":
++      return load("llvm", llvm_lib, CONDA_PREFIX/"include"/"llvm-c/**/*.h",
++                  args=lambda: system("llvm-config --cflags").split(), recsym=True, prolog=["from tinygrad.helpers import WIN"])
+     case "pci": return load("pci", None, ["/usr/include/linux/pci_regs.h"])
+     case "vfio": return load("vfio", None, ["/usr/include/linux/vfio.h"])
+     # could add rule: WGPU_COMMA -> ','
+@@ -134,9 +139,9 @@ def __getattr__(nm):
+   tarball="https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.7/mesa-25.2.7.tar.gz",
+   prolog=["import gzip, base64"], epilog=lambda path: [system(f"{root}/extra/mesa/lvp_nir_options.sh {path}")])
+     case "libclang":
+-      return load("libclang", "['clang-20', 'clang']",
+-                  lambda: [f"{system('llvm-config-20 --includedir')}/clang-c/{s}.h" for s in ["Index", "CXString", "CXSourceLocation", "CXFile"]],
+-                  args=lambda: system("llvm-config-20 --cflags").split())
++      return load("libclang", clang_lib,
++                  [CONDA_PREFIX/"include"/"clang-c"/f"{s}.h" for s in ["Index", "CXString", "CXSourceLocation", "CXFile"],
++                  args=lambda: system("llvm-config --cflags").split(), prolog=["from tinygrad.helpers import WIN"])
+     case "metal":
+       return load("metal", "'Metal'", [f"{macossdk}/System/Library/Frameworks/Metal.framework/Headers/MTL{s}.h" for s in
+                   ["ComputeCommandEncoder", "ComputePipeline", "CommandQueue", "Device", "IndirectCommandBuffer", "Resource", "CommandEncoder"]],
+diff --git a/tinygrad/runtime/autogen/libclang.py b/tinygrad/runtime/autogen/libclang.py
+index dbf22b6f5..40efbd00f 100644
+--- a/tinygrad/runtime/autogen/libclang.py
++++ b/tinygrad/runtime/autogen/libclang.py
+@@ -1,7 +1,8 @@
+ # mypy: ignore-errors
+ import ctypes
+ from tinygrad.runtime.support.c import DLL, Struct, CEnum, _IO, _IOW, _IOR, _IOWR
+-dll = DLL('libclang', ['clang-20', 'clang'])
++from tinygrad.helpers import WIN
++dll = DLL('libclang', 'libclang-13' if WIN else 'clang')
+ CXIndex = ctypes.c_void_p
+ class struct_CXTargetInfoImpl(Struct): pass
+ CXTargetInfo = ctypes.POINTER(struct_CXTargetInfoImpl)
+diff --git a/tinygrad/runtime/autogen/llvm.py b/tinygrad/runtime/autogen/llvm.py
+index 7d05224e7..28fc97762 100644
+--- a/tinygrad/runtime/autogen/llvm.py
++++ b/tinygrad/runtime/autogen/llvm.py
+@@ -2,7 +2,7 @@
+ import ctypes
+ from tinygrad.runtime.support.c import DLL, Struct, CEnum, _IO, _IOW, _IOR, _IOWR
+ from tinygrad.helpers import WIN, OSX
+-dll = DLL('llvm', 'C:\\Program Files\\LLVM\\bin\\LLVM-C.dll' if WIN else '/opt/homebrew/opt/llvm@20/lib/libLLVM.dylib' if OSX else ['LLVM', 'LLVM-21', 'LLVM-20', 'LLVM-19', 'LLVM-18', 'LLVM-17', 'LLVM-16', 'LLVM-15', 'LLVM-14'])
++dll = DLL('llvm', 'LLVM-C' if WIN else 'LLVM')
+ intmax_t = ctypes.c_int64
+ try: (imaxabs:=dll.imaxabs).restype, imaxabs.argtypes = intmax_t, [intmax_t]
+ except AttributeError: pass
+diff --git a/tinygrad/runtime/support/c.py b/tinygrad/runtime/support/c.py
+index f6e543043..c4c79b49a 100644
+--- a/tinygrad/runtime/support/c.py
++++ b/tinygrad/runtime/support/c.py
+@@ -37,13 +37,18 @@ def CEnum(typ: type[ctypes._SimpleCData]):
+ 
+   return _CEnum
+ 
++CONDA_PREFIX = os.environ.get('CONDA_PREFIX', None)
++# turn into full path; windows has a different layout
++CONDA_PREFIX = pathlib.Path(CONDA_PREFIX)/"Library" if WIN else pathlib.Path(CONDA_PREFIX)
++
+ class DLL(ctypes.CDLL):
+   @staticmethod
+   def findlib(nm:str, paths:list[str], extra_paths=[]):
+     if nm == 'libc' and OSX: return '/usr/lib/libc.dylib'
+     if pathlib.Path(path:=getenv(nm.replace('-', '_').upper()+"_PATH", '')).is_file(): return path
+     for p in paths:
+-      libpaths = {"posix": ["/usr/lib64", "/usr/lib", "/usr/local/lib"], "nt": os.environ['PATH'].split(os.pathsep),
++      libpaths = {"posix": [CONDA_PREFIX/"lib", "/usr/lib64", "/usr/lib", "/usr/local/lib"],
++                  "nt": [CONDA_PREFIX/"bin"] + os.environ['PATH'].split(os.pathsep),
+                   "darwin": ["/opt/homebrew/lib", f"/System/Library/Frameworks/{p}.framework"],
+                   'linux': ['/lib', '/lib64', f"/lib/{sysconfig.get_config_var('MULTIARCH')}", "/usr/lib/wsl/lib/"]}
+       if (pth:=pathlib.Path(p)).is_absolute():

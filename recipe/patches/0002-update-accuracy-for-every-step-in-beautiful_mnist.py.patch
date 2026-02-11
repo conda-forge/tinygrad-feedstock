@@ -1,7 +1,7 @@
-From 99183f0342d8661644045421ec6bc17e37d23fe5 Mon Sep 17 00:00:00 2001
+From b2818d4016647bc492cb056a89affd9132995065 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Wed, 17 Dec 2025 22:59:20 +1100
-Subject: [PATCH 02/10] update accuracy for every step in beautiful_mnist.py
+Subject: [PATCH 2/9] update accuracy for every step in beautiful_mnist.py
 
 ---
  examples/beautiful_mnist.py | 2 +-

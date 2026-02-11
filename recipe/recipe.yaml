@@ -12,29 +12,28 @@ source:
   - url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
     sha256: 5bddedec6fcf4e963a957c270532599ccab798f41dfb335f00abe9c4b291cf9c
     patches:
-      - patches/0001-point-to-our-own-llvmdev.patch
+      # search CONDA_PREFIX first, esp. for llvmdev/clangdev
+      - patches/0001-look-for-libraries-in-PREFIX-first.patch
       # see more clearly what's happening in mnist test
       - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
       # use CONDA_BUILD_SYSROOT instead of whatever's lying around in image
       - patches/0003-use-our-standard-macos-sdk.patch
-      # search CONDA_PREFIX first
-      - patches/0004-look-for-libraries-in-PREFIX-first.patch
       # ensure we find vendored applegpu
-      - patches/0005-make-apple-disassembler-runnable-when-installed.patch
+      - patches/0004-make-apple-disassembler-runnable-when-installed.patch
       - if: osx and x86_64
         then:
           # disable metal on osx
-          - patches/0006-default-to-CPU-as-device-on-osx-64-remove-metal.patch
+          - patches/0005-default-to-CPU-as-device-on-osx-64-remove-metal.patch
       - if: osx and arm64
         then:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
-          - patches/0007-skip-metal-disassembly-for-vanilla-clang.patch
+          - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
       # help nvcc find target-specific headers
-      - patches/0008-add-target_dir-based-include-paths-for-CUDA-compiler.patch
+      - patches/0007-add-target_dir-based-include-paths-for-CUDA-compiler.patch
       # revert https://github.com/tinygrad/tinygrad/pull/14086 (until we have ggml)
-      - patches/0009-Revert-don-t-skip-gguf-test-if-ggml-is-not-installed.patch
-      - patches/0010-skip-test-for-models-that-are-not-available-anymore.patch
+      - patches/0008-Revert-don-t-skip-gguf-test-if-ggml-is-not-installed.patch
+      - patches/0009-skip-test-for-models-that-are-not-available-anymore.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
@@ -124,15 +123,16 @@ outputs:
       - python:
           imports:
             - tinygrad
+            - tinygrad.runtime.autogen.libclang
             - tinygrad.runtime.autogen.llvm
           pip_check: true
       - script:
+          # not covered by bare import test, because these are all members with try/except fallbacks
+          - python -c "from tinygrad.runtime.autogen.libclang import clang_getFile"
+          - python -c "from tinygrad.runtime.autogen.llvm import LLVMParseBitcode"
           - if: linux
             then:
-              # cannot do a bare import test, because libc.syscall is a member, not a package
               - python -c "from tinygrad.runtime.autogen.libc import syscall"
-            else:
-              - echo nothing
       # integration-test in addition to test suite below
       - files:
           source:
