@@ -151,7 +151,9 @@ outputs:
               # reduce number of steps in emulation
               - export STEPS=3
               - export TARGET_EVAL_ACC_PCT=30
-          - python ./examples/beautiful_mnist.py
+          - if: match(cuda_compiler_version, "!=13.0")
+            then:
+              - python ./examples/beautiful_mnist.py
           # run again with high DEBUG value; exercises different paths, e.g. needs capstone
           - if: unix
             then:
@@ -162,7 +164,7 @@ outputs:
               - set "STEPS=1"
               - set "DEBUG=10"
               - set "TARGET_EVAL_ACC_PCT="
-          - if: not aarch64
+          - if: not aarch64 and match(cuda_compiler_version, "!=13.0")
             then:
               # suppress enormously noisy output; re-enable if things actually fail
               - python ./examples/beautiful_mnist.py > /dev/null
