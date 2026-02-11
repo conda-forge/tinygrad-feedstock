@@ -165,6 +165,11 @@ outputs:
   - package:
       name: tinygrad-tests
     build:
+      skip:
+        # opengpu server has sm_70 card that's not supported by CUDA 13 anymore
+        - match(cuda_compiler_version, ">=13.0")
+        # missing onnxruntime
+        - match(python, ">=3.14")
       # splitting off what conda packages under etc/conda/test-files when using test.files.source
       script:
         - if: unix
