@@ -1,14 +1,14 @@
-From 6eb4419a10a20bb641564f538c9864947069d06e Mon Sep 17 00:00:00 2001
+From 460b6b9b84e40cb1051ee062745b918c1fcd25e0 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Mon, 27 Oct 2025 15:37:17 +0100
 Subject: [PATCH 01/10] point to our own llvmdev
 
 ---
- tinygrad/runtime/autogen/__init__.py | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ tinygrad/runtime/autogen/__init__.py | 29 ++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
 diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
-index 5617e73f6..c73c07384 100644
+index 5617e73f6..3f5d56618 100644
 --- a/tinygrad/runtime/autogen/__init__.py
 +++ b/tinygrad/runtime/autogen/__init__.py
 @@ -1,5 +1,11 @@
@@ -40,7 +40,7 @@ index 5617e73f6..c73c07384 100644
      case "pci": return load("pci", None, ["/usr/include/linux/pci_regs.h"])
      case "vfio": return load("vfio", None, ["/usr/include/linux/vfio.h"])
      # could add rule: WGPU_COMMA -> ','
-@@ -134,9 +145,14 @@ def __getattr__(nm):
+@@ -134,9 +145,15 @@ def __getattr__(nm):
    tarball="https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.7/mesa-25.2.7.tar.gz",
    prolog=["import gzip, base64"], epilog=lambda path: [system(f"{root}/extra/mesa/lvp_nir_options.sh {path}")])
      case "libclang":
@@ -52,9 +52,10 @@ index 5617e73f6..c73c07384 100644
 +                    lambda: [f"{system('llvm-config-20 --includedir')}/clang-c/{s}.h" for s in ["Index", "CXString", "CXSourceLocation", "CXFile"]],
 +                    args=lambda: system("llvm-config-20 --cflags").split())
 +      else:
-+        return load("libclang", "['clang-20', 'clang']",
-+                    lambda: [f"{system('llvm-config-20 --includedir')}/clang-c/{s}.h" for s in ["Index", "CXString", "CXSourceLocation", "CXFile"]],
-+                    args=lambda: system("llvm-config-20 --cflags").split())
++        clang_lib = CONDA_PREFIX/(r"bin\libclang-13.dll" if WIN else f"lib/libclang.{'dylib' if OSX else 'so'}")
++        return load("libclang", clang_lib,
++                    [CONDA_PREFIX/"include"/"clang-c"/f"{s}.h" for s in ["Index", "CXString", "CXSourceLocation", "CXFile"],
++                    args=lambda: system("llvm-config --cflags").split())
      case "metal":
        return load("metal", "'Metal'", [f"{macossdk}/System/Library/Frameworks/Metal.framework/Headers/MTL{s}.h" for s in
                    ["ComputeCommandEncoder", "ComputePipeline", "CommandQueue", "Device", "IndirectCommandBuffer", "Resource", "CommandEncoder"]],

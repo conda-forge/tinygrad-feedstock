@@ -1,4 +1,4 @@
-From 8df799ea9237d3a52c4c0a4ba3e254b5f8e54ca1 Mon Sep 17 00:00:00 2001
+From b0cdcc168250d80df95d322603217d640ebe3619 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Sun, 28 Dec 2025 13:56:39 +1100
 Subject: [PATCH 04/10] look for libraries in PREFIX first

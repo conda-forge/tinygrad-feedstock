@@ -1,4 +1,4 @@
-From 780bfa6d2bff8396f2d5a62a69c1235c3ae21097 Mon Sep 17 00:00:00 2001
+From 579595aad61afc1158a555a879cb1a6a8e2e913a Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 16 Jan 2026 14:09:36 +1100
 Subject: [PATCH 06/10] default to CPU as device on osx-64, remove metal

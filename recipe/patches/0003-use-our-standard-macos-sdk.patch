@@ -1,4 +1,4 @@
-From 41c4a6a2ec0b2b9fe356e9e67b1244304bae6106 Mon Sep 17 00:00:00 2001
+From 73cda9d9ba6545dc784219410aa2ef3959ab4224 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 26 Dec 2025 10:46:26 +1100
 Subject: [PATCH 03/10] use our standard macos sdk
@@ -8,7 +8,7 @@ Subject: [PATCH 03/10] use our standard macos sdk
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
-index c73c07384..e20c5f366 100644
+index 3f5d56618..907ef3b5e 100644
 --- a/tinygrad/runtime/autogen/__init__.py
 +++ b/tinygrad/runtime/autogen/__init__.py
 @@ -12,7 +12,8 @@ nv_src = {"nv_570": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/8

@@ -1,4 +1,4 @@
-From 8d5cbcd3d4e9965e66c289747617e01b1b0f6532 Mon Sep 17 00:00:00 2001
+From 72b7cef63fdc8597e2aeb03d932079f07d9b9bb1 Mon Sep 17 00:00:00 2001
 From: George Hotz <72895+geohot@users.noreply.github.com>
 Date: Wed, 11 Feb 2026 09:30:13 +0800
 Subject: [PATCH 10/10] skip test for models that are not available anymore
