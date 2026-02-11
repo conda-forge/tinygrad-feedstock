@@ -41,6 +41,36 @@ description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_vers
 [tasks."inspect-linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"
+[tasks."build-linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"
+[tasks."build-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"
+[tasks."build-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"
+[tasks."build-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313 directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"
+[tasks."build-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"
 [tasks."build-linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython directly (without setup scripts)"
@@ -59,6 +89,12 @@ description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_vers
 [tasks."inspect-linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313"
+[tasks."build-linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"
 [tasks."build-linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython directly (without setup scripts)"
@@ -77,6 +113,36 @@ description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler
 [tasks."inspect-linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"
+[tasks."build-linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version12.9github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"
+[tasks."build-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.11.____cpython"
+[tasks."build-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.12.____cpython"
+[tasks."build-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313 directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.13.____cp313"
+[tasks."build-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_version13.0github_actions_labelscirun-openstack-gpu-2xlargepython3.14.____cp314"
 [tasks."build-linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.11.____cpython directly (without setup scripts)"
@@ -95,6 +161,12 @@ description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler
 [tasks."inspect-linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.13.____cp313"
+[tasks."build-linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant linux_aarch64_cuda_compiler_versionNonegithub_actions_labelscirun-openstack-cpu-largepython3.14.____cp314"
 [tasks."build-osx_64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant osx_64_python3.11.____cpython directly (without setup scripts)"
@@ -113,6 +185,12 @@ description = "Build tinygrad-feedstock with variant osx_64_python3.13.____cp313
 [tasks."inspect-osx_64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant osx_64_python3.13.____cp313"
+[tasks."build-osx_64_python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant osx_64_python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-osx_64_python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant osx_64_python3.14.____cp314"
 [tasks."build-osx_arm64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant osx_arm64_python3.11.____cpython directly (without setup scripts)"
@@ -131,6 +209,12 @@ description = "Build tinygrad-feedstock with variant osx_arm64_python3.13.____cp
 [tasks."inspect-osx_arm64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant osx_arm64_python3.13.____cp313"
+[tasks."build-osx_arm64_python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant osx_arm64_python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-osx_arm64_python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant osx_arm64_python3.14.____cp314"
 [tasks."build-win_64_cuda_compiler_version12.9python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version12.9python3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version12.9python3.11.____cpython directly (without setup scripts)"
@@ -149,6 +233,36 @@ description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_versio
 [tasks."inspect-win_64_cuda_compiler_version12.9python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version12.9python3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version12.9python3.13.____cp313"
+[tasks."build-win_64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version12.9python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_version12.9python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version12.9python3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version12.9python3.14.____cp314"
+[tasks."build-win_64_cuda_compiler_version13.0python3.11.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.11.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version13.0python3.11.____cpython directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_version13.0python3.11.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.11.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version13.0python3.11.____cpython"
+[tasks."build-win_64_cuda_compiler_version13.0python3.12.____cpython"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.12.____cpython.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version13.0python3.12.____cpython directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_version13.0python3.12.____cpython"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.12.____cpython.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version13.0python3.12.____cpython"
+[tasks."build-win_64_cuda_compiler_version13.0python3.13.____cp313"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.13.____cp313.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version13.0python3.13.____cp313 directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_version13.0python3.13.____cp313"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.13.____cp313.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version13.0python3.13.____cp313"
+[tasks."build-win_64_cuda_compiler_version13.0python3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_version13.0python3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_version13.0python3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_version13.0python3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_version13.0python3.14.____cp314"
 [tasks."build-win_64_cuda_compiler_versionNonepython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_versionNonepython3.11.____cpython.yaml"
 description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_versionNonepython3.11.____cpython directly (without setup scripts)"
@@ -167,6 +281,12 @@ description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_versio
 [tasks."inspect-win_64_cuda_compiler_versionNonepython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_versionNonepython3.13.____cp313.yaml"
 description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_versionNonepython3.13.____cp313"
+[tasks."build-win_64_cuda_compiler_versionNonepython3.14.____cp314"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_64_cuda_compiler_versionNonepython3.14.____cp314.yaml"
+description = "Build tinygrad-feedstock with variant win_64_cuda_compiler_versionNonepython3.14.____cp314 directly (without setup scripts)"
+[tasks."inspect-win_64_cuda_compiler_versionNonepython3.14.____cp314"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cuda_compiler_versionNonepython3.14.____cp314.yaml"
+description = "List contents of tinygrad-feedstock packages built for variant win_64_cuda_compiler_versionNonepython3.14.____cp314"
 
 [feature.smithy.dependencies]
 conda-smithy = "*"
