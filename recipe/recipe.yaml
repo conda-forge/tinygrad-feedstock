@@ -3,6 +3,7 @@ context:
   build_number: 1
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
+  cuda_pseudo_so: ${{ (cuda_compiler_version|default("") | split('.'))[0] ~ "0" }}
 
 recipe:
   name: tinygrad
@@ -12,7 +13,7 @@ source:
   - url: https://github.com/tinygrad/tinygrad/archive/refs/tags/v${{ version }}.tar.gz
     sha256: 5bddedec6fcf4e963a957c270532599ccab798f41dfb335f00abe9c4b291cf9c
     patches:
-      # search CONDA_PREFIX first, esp. for llvmdev/clangdev
+      # search CONDA_PREFIX first, esp. for llvmdev/clangdev/CUDA
       - patches/0001-look-for-libraries-in-PREFIX-first.patch
       # see more clearly what's happening in mnist test
       - patches/0002-update-accuracy-for-every-step-in-beautiful_mnist.py.patch
@@ -29,11 +30,9 @@ source:
           # cannot disassemble metal when using vanilla clang; see
           # https://github.com/tinygrad/tinygrad/issues/14005
           - patches/0006-skip-metal-disassembly-for-vanilla-clang.patch
-      # help nvcc find target-specific headers
-      - patches/0007-add-target_dir-based-include-paths-for-CUDA-compiler.patch
       # revert https://github.com/tinygrad/tinygrad/pull/14086 (until we have ggml)
-      - patches/0008-Revert-don-t-skip-gguf-test-if-ggml-is-not-installed.patch
-      - patches/0009-skip-test-for-models-that-are-not-available-anymore.patch
+      - patches/0007-Revert-don-t-skip-gguf-test-if-ggml-is-not-installed.patch
+      - patches/0008-skip-test-for-models-that-are-not-available-anymore.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu
@@ -60,6 +59,11 @@ outputs:
         - cuda_compiler_version == "None" and "gpu" in github_actions_labels
         - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       script:
+        - if: win
+          then:
+            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/__init__.py'
+            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvjitlink.py'
+            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvrtc.py'
         - python -m pip install . -vv
         - if: osx and arm64
           then:
@@ -86,6 +90,8 @@ outputs:
             # https://github.com/dougallj/applegpu/blob/main/compiler_explorer_tools/Makefile
             - clang
             - clangxx
+        - if: win
+          then: m2-sed
       host:
         - python
         - pip
@@ -104,6 +110,10 @@ outputs:
             - __cuda
             - cuda-nvcc_${{ host_platform }}
             - cuda-nvrtc-dev
+            - libnvjitlink-dev
+            - if: x86_64
+              then:
+                - cuda-opencl-dev
             - if: linux
               then:
                 - triton
@@ -133,6 +143,13 @@ outputs:
           - if: linux
             then:
               - python -c "from tinygrad.runtime.autogen.libc import syscall"
+          - if: cuda_compiler_version != "None"
+            then:
+              - python -c "from tinygrad.runtime.autogen.nvrtc import nvrtcGetPTXSize"
+              - python -c "from tinygrad.runtime.autogen.nvjitlink import nvJitLinkAddFile"
+          - if: cuda_compiler_version != "None" and x86_64
+            then:
+              - python -c "from tinygrad.runtime.autogen.opencl import clGetDeviceInfo"
       # integration-test in addition to test suite below
       - files:
           source:
