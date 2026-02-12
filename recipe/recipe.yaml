@@ -35,6 +35,7 @@ source:
       - patches/0008-skip-test-for-models-that-are-not-available-anymore.patch
       # nvcc complains if clang is too new, even with v20, which upstream uses
       - patches/0009-allow-newer-clang-with-nvcc.patch
+      - patches/0010-avoid-redundant-definitions-of-INFINITY-NAN.patch
   - if: osx and arm64
     then:
       - target_directory: tinygrad/extra/disassemblers/applegpu

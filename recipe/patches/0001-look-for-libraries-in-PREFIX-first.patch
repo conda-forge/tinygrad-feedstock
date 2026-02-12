@@ -1,7 +1,7 @@
 From 006f265a940254fbefe16238b803b7030699e799 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Mon, 27 Oct 2025 15:37:17 +0100
-Subject: [PATCH 1/9] look for libraries in PREFIX first
+Subject: [PATCH 01/10] look for libraries in PREFIX first
 
 also add target-based include paths for CUDA compilers
 ---

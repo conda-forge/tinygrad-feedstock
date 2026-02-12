@@ -1,7 +1,7 @@
 From e50acb9e808b6d2f57c1428ffede4b16021e2a39 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 26 Dec 2025 10:46:26 +1100
-Subject: [PATCH 3/9] use our standard macos sdk
+Subject: [PATCH 03/10] use our standard macos sdk
 
 ---
  tinygrad/runtime/autogen/__init__.py | 4 +++-

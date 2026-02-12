@@ -1,7 +1,7 @@
-From 67aa7152c2ece2b6fd87f9f55939eb3df533732f Mon Sep 17 00:00:00 2001
+From f22ef3002fecf599acafd538312402774135e777 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Thu, 12 Feb 2026 17:12:27 +1100
-Subject: [PATCH 9/9] allow newer clang with nvcc
+Subject: [PATCH 09/10] allow newer clang with nvcc
 
 ---
  tinygrad/runtime/support/compiler_cuda.py | 2 +-
