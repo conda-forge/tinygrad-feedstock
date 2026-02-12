@@ -1,7 +1,7 @@
 From 50d2ed3bd5539620558c1f7c8de58980146ed8af Mon Sep 17 00:00:00 2001
 From: George Hotz <72895+geohot@users.noreply.github.com>
 Date: Wed, 11 Feb 2026 09:30:13 +0800
-Subject: [PATCH 8/8] skip test for models that are not available anymore
+Subject: [PATCH 8/9] skip test for models that are not available anymore
 
 very partial backport of https://github.com/tinygrad/tinygrad/commit/2d4ad9e739e75d883bac6a86e2f02a35c89a9261
 ---

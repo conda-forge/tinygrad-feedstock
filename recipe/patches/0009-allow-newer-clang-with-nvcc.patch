@@ -1,0 +1,22 @@
+From 67aa7152c2ece2b6fd87f9f55939eb3df533732f Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Thu, 12 Feb 2026 17:12:27 +1100
+Subject: [PATCH 9/9] allow newer clang with nvcc
+
+---
+ tinygrad/runtime/support/compiler_cuda.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tinygrad/runtime/support/compiler_cuda.py b/tinygrad/runtime/support/compiler_cuda.py
+index 7ec0838a1..21b574bc2 100644
+--- a/tinygrad/runtime/support/compiler_cuda.py
++++ b/tinygrad/runtime/support/compiler_cuda.py
+@@ -69,7 +69,7 @@ class NVCCCompiler(Compiler):
+     with tempfile.NamedTemporaryFile(suffix=".cu") as srcf, tempfile.NamedTemporaryFile(suffix=".ptx") as libf:
+       srcf.write(src.encode())
+       srcf.flush()
+-      subprocess.run(["nvcc", f"-arch={self.arch}", "-ptx", "-o", libf.name, srcf.name] + self.extra_options, check=True)
++      subprocess.run(["nvcc", "-allow-unsupported-compiler", f"-arch={self.arch}", "-ptx", "-o", libf.name, srcf.name] + self.extra_options, check=True)
+       return libf.read()
+   def disassemble(self, lib:bytes): cuda_disassemble(lib, self.arch)
+ 
