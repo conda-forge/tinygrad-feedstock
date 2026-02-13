@@ -1,4 +1,4 @@
-From 8cd5215e905539181221bd58343aa277fcdb24d9 Mon Sep 17 00:00:00 2001
+From d163278dca0bc777411fc3eb014d3c291f0f533c Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 13 Feb 2026 09:47:14 +1100
 Subject: [PATCH 10/10] avoid redundant definitions of INFINITY/NAN
