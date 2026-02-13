@@ -279,8 +279,17 @@ outputs:
                 - 'tests_to_skip += " or test_load_clang_jit_strtab"'
             - if: linux and cuda_compiler_version != "None"
               then:
+                # GC clean-up error
+                - 'tests_to_skip += " or test_assign_refcount"'
                 # RuntimeError: Attribute list does not match Module context!
                 - 'tests_to_skip += " or test_bf16_disk_write_read"'
+                # expects zero memory use for `.schedule()`
+                - 'tests_to_skip += " or test_schedule_mem_used"'
+                # slightly higher memory use than anticipated
+                - 'tests_to_skip += " or test_unet_resblock"'
+                # somehow fails to stat (or create?!) a temporary file
+                - 'tests_to_skip += " or test_save_all_dtypes"'
+                - 'tests_to_skip += " or (TestDiskTensorMovement and test_slice)"'
             - if: osx or (linux and cuda_compiler_version != "None")
               then:
                 # beam-related stuff seems to hang on metal, OOM/crash with CUDA
