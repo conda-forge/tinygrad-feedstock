@@ -1,23 +1,24 @@
-From 41c4a6a2ec0b2b9fe356e9e67b1244304bae6106 Mon Sep 17 00:00:00 2001
+From e50acb9e808b6d2f57c1428ffede4b16021e2a39 Mon Sep 17 00:00:00 2001
 From: "H. Vetinari" <h.vetinari@gmx.com>
 Date: Fri, 26 Dec 2025 10:46:26 +1100
 Subject: [PATCH 03/10] use our standard macos sdk
 
 ---
- tinygrad/runtime/autogen/__init__.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tinygrad/runtime/autogen/__init__.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tinygrad/runtime/autogen/__init__.py b/tinygrad/runtime/autogen/__init__.py
-index c73c07384..e20c5f366 100644
+index e376db56d..62d04cf4b 100644
 --- a/tinygrad/runtime/autogen/__init__.py
 +++ b/tinygrad/runtime/autogen/__init__.py
-@@ -12,7 +12,8 @@ nv_src = {"nv_570": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/8
+@@ -7,7 +7,9 @@ nv_src = {"nv_570": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/8
            "nv_580": "https://github.com/NVIDIA/open-gpu-kernel-modules/archive/2af9f1f0f7de4988432d4ae875b5858ffdb09cc2.tar.gz"}
  ffmpeg_src = "https://ffmpeg.org/releases/ffmpeg-8.0.1.tar.gz"
  rocr_src = "https://github.com/ROCm/rocm-systems/archive/refs/tags/rocm-7.1.1.tar.gz"
 -macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-+CONDA_BUILD_SYSROOT = os.environ.get('CONDA_BUILD_SYSROOT', None)
-+macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" if CONDA_BUILD_SYSROOT is None else CONDA_BUILD_SYSROOT
++
++CONDA_BUILD_SYSROOT = getenv("CONDA_BUILD_SYSROOT", "")
++macossdk = "/var/db/xcode_select_link/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" if CONDA_BUILD_SYSROOT == "" else CONDA_BUILD_SYSROOT
  
- llvm_lib = (r"'C:\\Program Files\\LLVM\\bin\\LLVM-C.dll' if WIN else '/opt/homebrew/opt/llvm@20/lib/libLLVM.dylib' if OSX else " +
-             repr(['LLVM'] + [f'LLVM-{i}' for i in reversed(range(14, 21+1))]))
+ llvm_name = "'LLVM-C' if WIN else 'LLVM'"
+ clang_name = "'libclang-13' if WIN else 'clang'"
