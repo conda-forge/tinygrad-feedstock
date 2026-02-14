@@ -1,9 +1,10 @@
 context:
   version: "0.12.0"
-  build_number: 1
+  build_number: 2
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
-  cuda_pseudo_so: ${{ (cuda_compiler_version|default("") | split('.'))[0] ~ "0" }}
+  # we don't want to leave random substitution left-overs; use naming of CUDA 12 for CPU variant
+  cuda_pseudo_so: ${{ (cuda_compiler_version|default("12") | split('.'))[0] ~ "0" }}
 
 recipe:
   name: tinygrad
@@ -62,11 +63,10 @@ outputs:
         - cuda_compiler_version == "None" and "gpu" in github_actions_labels
         - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       script:
-        - if: win
-          then:
-            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/__init__.py'
-            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvjitlink.py'
-            - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvrtc.py'
+        # do this unconditionally to not leave around random substitution left-overs
+        - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/__init__.py'
+        - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvjitlink.py'
+        - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/nvrtc.py'
         - python -m pip install . -vv
         - if: osx and arm64
           then:
@@ -93,8 +93,9 @@ outputs:
             # https://github.com/dougallj/applegpu/blob/main/compiler_explorer_tools/Makefile
             - clang
             - clangxx
-        - if: win
-          then: m2-sed
+        - if: unix
+          then: sed
+          else: m2-sed
       host:
         - python
         - pip
