@@ -1,6 +1,6 @@
 context:
   version: "0.12.0"
-  build_number: 2
+  build_number: 3
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
   # we don't want to leave random substitution left-overs; use naming of CUDA 12 for CPU variant
@@ -151,9 +151,9 @@ outputs:
             then:
               - python -c "from tinygrad.runtime.autogen.nvrtc import nvrtcGetPTXSize"
               - python -c "from tinygrad.runtime.autogen.nvjitlink import nvJitLinkAddFile"
-          - if: cuda_compiler_version != "None" and x86_64
-            then:
-              - python -c "from tinygrad.runtime.autogen.opencl import clGetDeviceInfo"
+              - if: x86_64
+                then:
+                  - python -c "from tinygrad.runtime.autogen.opencl import clGetDeviceInfo"
       # integration-test in addition to test suite below
       - files:
           source:
@@ -278,19 +278,19 @@ outputs:
                 - 'tests_to_skip += " or test_bitfield_interop or test_packed_struct_interop"'
                 # mismatch in expected number of relocations
                 - 'tests_to_skip += " or test_load_clang_jit_strtab"'
-            - if: linux and cuda_compiler_version != "None"
-              then:
+                - if: cuda_compiler_version != "None"
+                  then:
                 # GC clean-up error
-                - 'tests_to_skip += " or test_assign_refcount"'
+                    - 'tests_to_skip += " or test_assign_refcount"'
                 # RuntimeError: Attribute list does not match Module context!
-                - 'tests_to_skip += " or test_bf16_disk_write_read"'
+                    - 'tests_to_skip += " or test_bf16_disk_write_read"'
                 # expects zero memory use for `.schedule()`
-                - 'tests_to_skip += " or test_schedule_mem_used"'
+                    - 'tests_to_skip += " or test_schedule_mem_used"'
                 # slightly higher memory use than anticipated
-                - 'tests_to_skip += " or test_unet_resblock"'
+                    - 'tests_to_skip += " or test_unet_resblock"'
                 # somehow fails to stat (or create?!) a temporary file
-                - 'tests_to_skip += " or test_save_all_dtypes"'
-                - 'tests_to_skip += " or (TestDiskTensorMovement and test_slice)"'
+                    - 'tests_to_skip += " or test_save_all_dtypes"'
+                    - 'tests_to_skip += " or (TestDiskTensorMovement and test_slice)"'
             - if: osx or (linux and cuda_compiler_version != "None")
               then:
                 # beam-related stuff seems to hang on metal, OOM/crash with CUDA
@@ -303,9 +303,9 @@ outputs:
                 - 'tests_to_skip += " or test_putotherprocess"'
                 # running into weakly-referenced object no longer exists
                 - 'tests_to_skip += " or TestGC or test_gc"'
-            - if: osx and arm64
-              then:
-                - 'tests_to_skip += " or (TestOpsUint8 and test_cast)"'
+                - if: arm64
+                  then:
+                    - 'tests_to_skip += " or (TestOpsUint8 and test_cast)"'
             - if: osx and x86_64
               then:
                 # signed int32 overflow
