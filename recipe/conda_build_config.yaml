@@ -4,10 +4,5 @@ c_stdlib_version:   # [osx]
 MACOSX_SDK_VERSION: # [osx]
   - 15.5            # [osx]
 
-github_actions_labels:          # [unix]
-  # We use 8CPU runners for CPU builds, and 16CPU runners for CUDA builds
-  - namespace-profile-8cpu-on-linux-64    # [linux64]
-  - namespace-profile-16cpu-on-linux-64   # [linux64]
-  - namespace-profile-8cpu-on-linux-aarch64   # [linux and aarch64]
-  - namespace-profile-16cpu-on-linux-aarch64   # [linux and aarch64]
+github_actions_labels:             # [osx]
   - blacksmith-6vcpu-macos-latest  # [osx]

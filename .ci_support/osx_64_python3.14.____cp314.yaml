@@ -8,8 +8,6 @@ channel_targets:
 - conda-forge main
 cuda_compiler_version:
 - None
-github_actions_labels:
-- blacksmith-6vcpu-macos-latest
 macos_machine:
 - x86_64-apple-darwin13.4.0
 pin_run_as_build:
