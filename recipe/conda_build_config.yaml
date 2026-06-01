@@ -5,6 +5,7 @@ MACOSX_SDK_VERSION: # [osx]
   - 15.5            # [osx]
 
 github_actions_labels:          # [unix]
-  - cirun-openstack-cpu-large   # [linux]
-  - cirun-openstack-gpu-2xlarge # [linux]
-  - cirun-macos-m4-large        # [osx]
+  - namespace-profile-8cpu-on-linux-64    # [linux]
+  # This one below should be for GPU, but there's no GPU provider anymore/yet
+  - namespace-profile-16cpu-on-linux-64   # [linux]
+  - namespace-profile-12cpu-on-osx-arm64  # [osx]

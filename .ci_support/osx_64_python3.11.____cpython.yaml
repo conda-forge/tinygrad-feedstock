@@ -9,7 +9,7 @@ channel_targets:
 cuda_compiler_version:
 - None
 github_actions_labels:
-- cirun-macos-m4-large
+- namespace-profile-12cpu-on-osx-arm64
 macos_machine:
 - x86_64-apple-darwin13.4.0
 pin_run_as_build:
