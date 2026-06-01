@@ -1,6 +1,6 @@
 context:
   version: "0.12.0"
-  build_number: 2
+  build_number: 3
   # see github.com/conda-forge/conda-forge.github.io/issues/1059 for naming discussion
   proc_type: ${{ "cuda" ~ cuda_compiler_version | version_to_buildstring if cuda_compiler_version != "None" else "cpu" }}
   # we don't want to leave random substitution left-overs; use naming of CUDA 12 for CPU variant
@@ -47,21 +47,12 @@ build:
   number: ${{ build_number }}
   string: ${{ proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   skip:
-    # CUDA builds on GPU agents, non-CUDA builds on CPU agents; skip could be avoided
-    # using https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/6910
-    - cuda_compiler_version == "None" and "gpu" in github_actions_labels
-    - cuda_compiler_version != "None" and "cpu" in github_actions_labels
     - match(python, "<3.11")
 
 outputs:
   - package:
       name: tinygrad
     build:
-      # redundant but: https://github.com/prefix-dev/rattler-build/issues/2110
-      skip:
-        - match(python, "<3.11")
-        - cuda_compiler_version == "None" and "gpu" in github_actions_labels
-        - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       script:
         # do this unconditionally to not leave around random substitution left-overs
         - 'sed -i "s/@CUDA_VERSION@/${{ cuda_pseudo_so }}/" tinygrad/runtime/autogen/__init__.py'
@@ -161,18 +152,16 @@ outputs:
         script:
           # reduce number of steps; we just need to show that it's functional
           # however, accuracy should at least trend in the right direction
+          # we remove $PYTHON because it makes Tensor.device autoselection choke
           - if: unix
             then:
               - export STEPS=25
               - export TARGET_EVAL_ACC_PCT=90
+              - unset PYTHON
             else:
               - set "STEPS=25"
               - set "TARGET_EVAL_ACC_PCT=90"
-          - if: aarch64
-            then:
-              # reduce number of steps in emulation
-              - export STEPS=3
-              - export TARGET_EVAL_ACC_PCT=30
+              - set "PYTHON="
           - if: match(cuda_compiler_version, "!=13.0")
             then:
               - python ./examples/beautiful_mnist.py
@@ -201,8 +190,6 @@ outputs:
         - match(python, ">=3.14")
         # redundant but: https://github.com/prefix-dev/rattler-build/issues/2110
         - match(python, "<3.11")
-        - cuda_compiler_version == "None" and "gpu" in github_actions_labels
-        - cuda_compiler_version != "None" and "cpu" in github_actions_labels
       # splitting off what conda packages under etc/conda/test-files when using test.files.source
       script:
         - if: unix
@@ -263,6 +250,9 @@ outputs:
           content:
             - 'import pytest'
             - 'import sys'
+            - 'import os'
+            # $PYTHON makes Tensor device autoselection choke
+            - 'os.environ.pop("PYTHON", None)'
             - 'tests_to_skip = "_not_a_real_test"'
             - if: linux
               then:
