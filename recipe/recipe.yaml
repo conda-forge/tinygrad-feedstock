@@ -161,18 +161,16 @@ outputs:
         script:
           # reduce number of steps; we just need to show that it's functional
           # however, accuracy should at least trend in the right direction
+          # we remove $PYTHON because it makes Tensor.device autoselection choke
           - if: unix
             then:
               - export STEPS=25
               - export TARGET_EVAL_ACC_PCT=90
+              - unset PYTHON
             else:
               - set "STEPS=25"
               - set "TARGET_EVAL_ACC_PCT=90"
-          - if: aarch64
-            then:
-              # reduce number of steps in emulation
-              - export STEPS=3
-              - export TARGET_EVAL_ACC_PCT=30
+              - set "PYTHON="
           - if: match(cuda_compiler_version, "!=13.0")
             then:
               - python ./examples/beautiful_mnist.py
