@@ -4,7 +4,7 @@ azure:
     variables:
       SET_PAGEFILE: 'True'
 build_platform:
-  linux_aarch64: linux_64
+  linux_aarch64: linux_aarch64
 conda_build:
   error_overlinking: true
 conda_build_tool: rattler-build
@@ -20,6 +20,7 @@ github_actions:
   - pull_request
 provider:
   linux_64: github_actions
+  linux_aarch64: github_actions
   osx_arm64: github_actions
 workflow_settings:
   build_workspace_dir: 
