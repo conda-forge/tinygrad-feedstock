@@ -242,7 +242,7 @@ jobs:
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            runs_on: ['blacksmith-6vcpu-macos-latest']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
             docker_run_args: 
@@ -250,7 +250,7 @@ jobs:
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            runs_on: ['blacksmith-6vcpu-macos-latest']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
             docker_run_args: 
@@ -258,7 +258,7 @@ jobs:
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            runs_on: ['blacksmith-6vcpu-macos-latest']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
             docker_run_args: 
@@ -266,7 +266,7 @@ jobs:
             STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['namespace-profile-12cpu-on-osx-arm64']
+            runs_on: ['blacksmith-6vcpu-macos-latest']
             tools_install_dir: ~/miniforge3
             build_workspace_dir: ~/miniforge3/conda-bld
             docker_run_args: 

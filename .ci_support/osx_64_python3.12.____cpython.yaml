@@ -9,7 +9,7 @@ channel_targets:
 cuda_compiler_version:
 - None
 github_actions_labels:
-- namespace-profile-12cpu-on-osx-arm64
+- blacksmith-6vcpu-macos-latest
 macos_machine:
 - x86_64-apple-darwin13.4.0
 pin_run_as_build:
