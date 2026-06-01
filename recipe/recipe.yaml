@@ -261,6 +261,9 @@ outputs:
           content:
             - 'import pytest'
             - 'import sys'
+            - 'import os'
+            # $PYTHON makes Tensor device autoselection choke
+            - 'os.environ.pop("PYTHON", None)'
             - 'tests_to_skip = "_not_a_real_test"'
             - if: linux
               then:
